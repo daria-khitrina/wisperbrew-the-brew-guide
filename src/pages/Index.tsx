@@ -96,7 +96,7 @@ const Index = () => {
         {/* Brewing Screen */}
         <div id="brewing-screen" style={{
         display: 'none'
-      }} className="flex flex-col justify-between h-screen max-w-md mx-auto py-8 px-6 md:bg-white md:rounded-3xl md:shadow-md md:px-6">
+      }} className="flex flex-col justify-between h-screen max-w-md mx-auto py-8 px-6 md:bg-white md:rounded-3xl md:shadow-md md:px-0">
           {/* Progress bar at the top */}
           <div className="w-full">
             <div className="brew-progress-bar bg-[#e5eaf2] rounded-full h-3 w-full relative overflow-hidden shadow-xs">
