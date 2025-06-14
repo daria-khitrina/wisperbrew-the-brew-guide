@@ -1,4 +1,3 @@
-
 // Enhanced brewing recipe data with 11 detailed steps
 const BREWING_RECIPES = {
   oneCup: [
@@ -257,34 +256,10 @@ function displayStep(stepData) {
   }
 }
 
-// Initialize event listeners when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('WhisperBrew Enhanced Timer System initialized');
-  
-  // Add event listeners for cup size buttons
-  const oneCupBtn = document.querySelector('.btn-primary');
-  const twoCupBtn = document.querySelector('.btn-secondary');
-  
-  if (oneCupBtn) {
-    oneCupBtn.addEventListener('click', () => startBrewing('1-cup'));
-  }
-  
-  if (twoCupBtn) {
-    twoCupBtn.addEventListener('click', () => startBrewing('2-cup'));
-  }
-  
-  // Add reset button functionality
-  document.addEventListener('click', function(e) {
-    if (e.target.matches('.reset-btn') || e.target.matches('[data-action="reset"]')) {
-      resetBrewing();
-    }
-  });
-  
-  // Initialize home screen
-  showScreen('home');
-});
+// Initialize immediately when script loads
+console.log('WhisperBrew Enhanced Timer System initializing...');
 
-// Export enhanced functions for external use
+// Export enhanced functions for external use and React integration
 window.WhisperBrew = {
   showScreen,
   startBrewing,
@@ -298,3 +273,8 @@ window.WhisperBrew = {
   getTimerState: () => ({ remainingTime, isTimerRunning, currentStepIndex }),
   getTotalProgress: () => (currentStepIndex / currentRecipe.length) * 100
 };
+
+console.log('WhisperBrew functions available globally:', Object.keys(window.WhisperBrew));
+
+// Initialize home screen immediately
+showScreen('home');

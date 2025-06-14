@@ -1,19 +1,47 @@
-
 import { useEffect } from 'react';
+
+declare global {
+  interface Window {
+    WhisperBrew?: {
+      startBrewing: (cupSize: string) => void;
+      resetBrewing: () => void;
+    };
+  }
+}
 
 const Index = () => {
   useEffect(() => {
-    // Load the script dynamically
+    // Load the script synchronously
     const script = document.createElement('script');
     script.src = '/src/script.js';
-    script.async = true;
-    document.body.appendChild(script);
+    script.async = false; // Changed to synchronous loading
+    document.head.appendChild(script);
 
     return () => {
       // Cleanup script on unmount
-      document.body.removeChild(script);
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
     };
   }, []);
+
+  const handleCupSelection = (cupSize: string) => {
+    console.log(`Button clicked for ${cupSize}`);
+    if (window.WhisperBrew && window.WhisperBrew.startBrewing) {
+      window.WhisperBrew.startBrewing(cupSize);
+    } else {
+      console.error('WhisperBrew not available');
+    }
+  };
+
+  const handleReset = () => {
+    console.log('Reset button clicked');
+    if (window.WhisperBrew && window.WhisperBrew.resetBrewing) {
+      window.WhisperBrew.resetBrewing();
+    } else {
+      console.error('WhisperBrew not available');
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
@@ -34,13 +62,19 @@ const Index = () => {
           </div>
           
           <div className="flex flex-col gap-4 justify-center items-center md:flex-row">
-            <button className="btn btn-primary btn-large">
+            <button 
+              className="btn btn-primary btn-large"
+              onClick={() => handleCupSelection('1-cup')}
+            >
               <div className="text-center">
                 <div className="text-lg font-semibold">1 Cup</div>
                 <div className="text-sm opacity-90">15g coffee • 250ml water</div>
               </div>
             </button>
-            <button className="btn btn-secondary btn-large">
+            <button 
+              className="btn btn-secondary btn-large"
+              onClick={() => handleCupSelection('2-cup')}
+            >
               <div className="text-center">
                 <div className="text-lg font-semibold">2 Cups</div>
                 <div className="text-sm">30g coffee • 500ml water</div>
@@ -78,7 +112,10 @@ const Index = () => {
             <div className="timer-display">00:30</div>
           </div>
           
-          <button className="btn btn-secondary reset-btn" data-action="reset">
+          <button 
+            className="btn btn-secondary reset-btn" 
+            onClick={handleReset}
+          >
             Reset
           </button>
         </div>
@@ -104,7 +141,10 @@ const Index = () => {
             <div className="timer-display">Done</div>
           </div>
           
-          <button className="btn btn-primary btn-large" data-action="reset">
+          <button 
+            className="btn btn-primary btn-large" 
+            onClick={handleReset}
+          >
             Brew Another Cup
           </button>
         </div>
