@@ -38,6 +38,7 @@ let isTimerRunning = false;
 let currentScreen = 'home';
 let stepStartTime = 0;
 let expectedEndTime = 0;
+let brewingStartTime = 0; // New: marks brew session start in ms
 
 // Add debug: Log recipes loaded when script starts
 console.log(
@@ -90,10 +91,12 @@ function startBrewing(cupSize) {
     currentRecipe[0]
   );
   
-  // Calculate total time for all steps
+  // Calculate total brew time (s)
   totalTime = currentRecipe.reduce((sum, step) => sum + step.duration, 0);
-  console.log(`Total brewing time: ${totalTime} seconds`);
-  
+
+  // New: Mark brewingStartTime for smooth progress calculation
+  brewingStartTime = Date.now();
+
   // Show brewing screen
   showScreen('brewing');
   
@@ -116,26 +119,27 @@ function updateTimer() {
   if (currentStep) {
     remainingTime = Math.max(0, currentStep.duration - actualElapsed);
     
-    // Update timer display for brewing screen
+    // Countdown for timer display
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;
     const timerDisplay = document.getElementById('brewing-timer-display');
     if (timerDisplay) {
       timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-      // Log countdown for dev check
       if (remainingTime <= 10) {
         console.log(`[Countdown] Brewing: ${minutes}:${seconds} | Step ${currentStepIndex+1}`);
       }
     }
-    
-    // Update progress bar
-    const stepProgress = ((currentStep.duration - remainingTime) / currentStep.duration) * 100;
-    const completedSteps = currentStepIndex;
-    const overallProgress = ((completedSteps / currentRecipe.length) + (stepProgress / 100 / currentRecipe.length)) * 100;
-    updateProgress(Math.min(overallProgress, 100));
   }
   
-  if (remainingTime <= 0) {
+  // --- Linear progress calculation
+  const totalElapsed = Math.max(0, Math.floor((Date.now() - brewingStartTime) / 1000));
+  let linearProgress = totalTime > 0 ? (totalElapsed / totalTime) * 100 : 0;
+  // Clamp to 0-100%
+  linearProgress = Math.max(0, Math.min(100, linearProgress));
+  updateProgress(linearProgress);
+
+  // Step complete check (unchanged)
+  if (remainingTime <= 0 && currentStep) {
     stepComplete();
   }
 }
@@ -162,11 +166,11 @@ function nextStep() {
   // Display current step
   displayStep(currentStep);
   
-  // Start high-precision timer interval
+  // Start high-frequency interval for ultra-smooth bar
   if (timerInterval) {
     clearInterval(timerInterval);
   }
-  timerInterval = setInterval(updateTimer, 100);
+  timerInterval = setInterval(updateTimer, 33);
   
   updateTimer();
 }
@@ -215,6 +219,7 @@ function resetBrewing() {
   isTimerRunning = false;
   stepStartTime = 0;
   expectedEndTime = 0;
+  brewingStartTime = 0;
   
   if (timerInterval) {
     clearInterval(timerInterval);
