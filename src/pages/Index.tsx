@@ -1,4 +1,6 @@
+
 import { useEffect } from 'react';
+import { runConfetti } from '../lib/confetti';
 declare global {
   interface Window {
     WhisperBrew?: {
@@ -40,6 +42,29 @@ const Index = () => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    const completeScreen = document.getElementById('complete-screen');
+    if (!completeScreen) return;
+
+    const observer = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+          const target = mutation.target as HTMLElement;
+          if (target.style.display !== 'none') {
+            runConfetti();
+          }
+        }
+      }
+    });
+
+    observer.observe(completeScreen, { attributes: true });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   const handleCupSelection = (cupSize: string) => {
     console.log(`Button clicked for ${cupSize}`);
     if (window.WhisperBrew && window.WhisperBrew.startBrewing) {
