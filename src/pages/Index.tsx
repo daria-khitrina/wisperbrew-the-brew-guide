@@ -94,29 +94,25 @@ const Index = () => {
         {/* Brewing Screen */}
         <div
           id="brewing-screen"
-          className="flex flex-col items-center justify-center min-h-[420px] max-w-md mx-auto px-6 py-10 gap-8 md:bg-white md:rounded-3xl md:shadow-md"
+          className="flex flex-col items-center justify-center min-h-[420px] max-w-md mx-auto px-6 py-10 md:bg-white md:rounded-3xl md:shadow-md"
           style={{ display: 'none' }}
         >
-          <div className="w-full flex flex-col items-center gap-4">
-            {/* Only Step instruction, no step description */}
-            <h2
-              id="step-instruction"
-              className="font-bold text-2xl text-black text-center tracking-tight"
-            >
-              {/* JS will set this text */}
-              Pour 50ml of water to bloom
-            </h2>
-          </div>
+          {/* Step instruction */}
+          <h2
+            id="step-instruction"
+            className="font-bold text-2xl text-black text-center tracking-tight mb-16"
+          >
+            {/* JS will set this text */}
+            Pour 50ml of water to bloom
+          </h2>
 
           {/* Progress timeline (blue bar) */}
-          <div className="w-full flex flex-col items-center gap-2">
-            <div className="w-full">
-              <div className="brew-progress-bar bg-[#e5eaf2] rounded-full h-3 w-full relative overflow-hidden shadow-xs">
-                <div
-                  className="brew-progress-fill absolute left-0 top-0 h-3 bg-[#3B82F6] transition-all duration-300"
-                  style={{ width: '0%' }}
-                ></div>
-              </div>
+          <div className="w-full mb-8">
+            <div className="brew-progress-bar bg-[#e5eaf2] rounded-full h-3 w-full relative overflow-hidden shadow-xs">
+              <div
+                className="brew-progress-fill absolute left-0 top-0 h-3 bg-[#3B82F6] transition-all duration-300"
+                style={{ width: '0%' }}
+              ></div>
             </div>
           </div>
 
