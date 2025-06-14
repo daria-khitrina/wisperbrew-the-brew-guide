@@ -4,77 +4,89 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Coffee-themed design system */
+/* Custom color system */
 
 @layer base {
   :root {
-    /* Coffee-inspired color palette */
-    --background: 43 35% 97%; /* Warm cream #FBF7F0 */
-    --foreground: 28 33% 15%; /* Rich coffee brown #2D1810 */
+    /* Custom IDS color palette */
+    --ids__text-RGB: 5, 5, 5;
+    --ids__link-RGB: 0, 100, 240;
+    --ids__hover-RGB: 0, 200, 0;
+    --ids__accent-RGB: 253, 47, 75;
+    --ids__code-RGB: 115, 120, 125;
+    --ids__mark-RGB: 255, 225, 0;
+    --ids__surface-RGB: 238, 240, 242;
+    --ids__background-RGB: 255, 255, 255;
+    --ids__chip-background-RGB: 5, 5, 5;
+    --ids__chip-text-RGB: 245, 245, 245;
 
-    --card: 43 35% 97%;
-    --card-foreground: 28 33% 15%;
+    /* Map to existing shadcn variables */
+    --background: rgb(var(--ids__background-RGB));
+    --foreground: rgb(var(--ids__text-RGB));
 
-    --popover: 43 35% 97%;
-    --popover-foreground: 28 33% 15%;
+    --card: rgb(var(--ids__surface-RGB));
+    --card-foreground: rgb(var(--ids__text-RGB));
 
-    --primary: 33 42% 66%; /* Golden accent #D4A574 */
-    --primary-foreground: 43 35% 97%;
+    --popover: rgb(var(--ids__background-RGB));
+    --popover-foreground: rgb(var(--ids__text-RGB));
 
-    --secondary: 33 28% 54%; /* Muted brown #8B6B47 */
-    --secondary-foreground: 43 35% 97%;
+    --primary: rgb(var(--ids__accent-RGB));
+    --primary-foreground: rgb(var(--ids__background-RGB));
 
-    --muted: 33 28% 54%;
-    --muted-foreground: 28 33% 15%;
+    --secondary: rgb(var(--ids__surface-RGB));
+    --secondary-foreground: rgb(var(--ids__text-RGB));
 
-    --accent: 33 42% 66%;
-    --accent-foreground: 28 33% 15%;
+    --muted: rgb(var(--ids__surface-RGB));
+    --muted-foreground: rgb(var(--ids__code-RGB));
+
+    --accent: rgb(var(--ids__hover-RGB));
+    --accent-foreground: rgb(var(--ids__text-RGB));
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 33 28% 85%; /* Light coffee tone */
-    --input: 33 28% 85%;
-    --ring: 33 42% 66%;
+    --border: rgb(var(--ids__surface-RGB));
+    --input: rgb(var(--ids__surface-RGB));
+    --ring: rgb(var(--ids__accent-RGB));
 
-    --radius: 0.75rem; /* Slightly more rounded for warmth */
+    --radius: 0.75rem;
 
-    /* Coffee-specific custom properties */
-    --coffee-dark: 28 33% 15%;
-    --coffee-medium: 33 28% 54%;
-    --coffee-light: 33 42% 66%;
-    --cream: 43 35% 97%;
-    --espresso: 25 40% 10%;
+    /* Coffee-specific custom properties using new colors */
+    --coffee-dark: rgb(var(--ids__text-RGB));
+    --coffee-medium: rgb(var(--ids__code-RGB));
+    --coffee-light: rgb(var(--ids__hover-RGB));
+    --cream: rgb(var(--ids__background-RGB));
+    --espresso: rgb(var(--ids__chip-background-RGB));
   }
 
   .dark {
-    --background: 28 33% 15%;
-    --foreground: 43 35% 97%;
+    --background: rgb(var(--ids__chip-background-RGB));
+    --foreground: rgb(var(--ids__chip-text-RGB));
 
-    --card: 28 33% 15%;
-    --card-foreground: 43 35% 97%;
+    --card: rgb(var(--ids__chip-background-RGB));
+    --card-foreground: rgb(var(--ids__chip-text-RGB));
 
-    --popover: 28 33% 15%;
-    --popover-foreground: 43 35% 97%;
+    --popover: rgb(var(--ids__chip-background-RGB));
+    --popover-foreground: rgb(var(--ids__chip-text-RGB));
 
-    --primary: 33 42% 66%;
-    --primary-foreground: 28 33% 15%;
+    --primary: rgb(var(--ids__accent-RGB));
+    --primary-foreground: rgb(var(--ids__chip-background-RGB));
 
-    --secondary: 33 28% 54%;
-    --secondary-foreground: 43 35% 97%;
+    --secondary: rgb(var(--ids__code-RGB));
+    --secondary-foreground: rgb(var(--ids__chip-text-RGB));
 
-    --muted: 33 28% 54%;
-    --muted-foreground: 43 35% 97%;
+    --muted: rgb(var(--ids__code-RGB));
+    --muted-foreground: rgb(var(--ids__chip-text-RGB));
 
-    --accent: 33 42% 66%;
-    --accent-foreground: 28 33% 15%;
+    --accent: rgb(var(--ids__hover-RGB));
+    --accent-foreground: rgb(var(--ids__chip-background-RGB));
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 33 28% 30%;
-    --input: 33 28% 30%;
-    --ring: 33 42% 66%;
+    --border: rgb(var(--ids__code-RGB));
+    --input: rgb(var(--ids__code-RGB));
+    --ring: rgb(var(--ids__accent-RGB));
   }
 }
 
@@ -91,10 +103,10 @@
 
   /* Coffee-themed utility classes */
   .coffee-gradient {
-    background: linear-gradient(135deg, hsl(var(--coffee-light)), hsl(var(--coffee-medium)));
+    background: linear-gradient(135deg, rgb(var(--ids__hover-RGB)), rgb(var(--ids__code-RGB)));
   }
 
   .cream-gradient {
-    background: linear-gradient(135deg, hsl(var(--cream)), hsl(var(--background)));
+    background: linear-gradient(135deg, rgb(var(--ids__background-RGB)), rgb(var(--ids__surface-RGB)));
   }
 }

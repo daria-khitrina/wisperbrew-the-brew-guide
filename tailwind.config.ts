@@ -57,14 +57,27 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Coffee-themed custom colors
-				coffee: {
-					dark: 'hsl(var(--coffee-dark))',
-					medium: 'hsl(var(--coffee-medium))',
-					light: 'hsl(var(--coffee-light))',
+				// Custom IDS colors
+				ids: {
+					text: 'rgb(var(--ids__text-RGB))',
+					link: 'rgb(var(--ids__link-RGB))',
+					hover: 'rgb(var(--ids__hover-RGB))',
+					accent: 'rgb(var(--ids__accent-RGB))',
+					code: 'rgb(var(--ids__code-RGB))',
+					mark: 'rgb(var(--ids__mark-RGB))',
+					surface: 'rgb(var(--ids__surface-RGB))',
+					background: 'rgb(var(--ids__background-RGB))',
+					'chip-background': 'rgb(var(--ids__chip-background-RGB))',
+					'chip-text': 'rgb(var(--ids__chip-text-RGB))',
 				},
-				cream: 'hsl(var(--cream))',
-				espresso: 'hsl(var(--espresso))',
+				// Coffee-themed custom colors using new palette
+				coffee: {
+					dark: 'rgb(var(--ids__text-RGB))',
+					medium: 'rgb(var(--ids__code-RGB))',
+					light: 'rgb(var(--ids__hover-RGB))',
+				},
+				cream: 'rgb(var(--ids__background-RGB))',
+				espresso: 'rgb(var(--ids__chip-background-RGB))',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
