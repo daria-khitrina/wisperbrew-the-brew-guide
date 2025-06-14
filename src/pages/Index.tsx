@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 
 declare global {
@@ -60,7 +61,7 @@ const Index = () => {
               onClick={() => handleCupSelection('1-cup')}
             >
               <div className="flex flex-col items-center gap-1">
-                <span className="font-bold">1 cup</span>
+                <span className="font-bold text-coffee-dark">1 cup</span>
                 <span className="text-sm opacity-80">15g beans + 250ml</span>
               </div>
             </button>
@@ -69,7 +70,7 @@ const Index = () => {
               onClick={() => handleCupSelection('2-cup')}
             >
               <div className="flex flex-col items-center gap-1">
-                <span className="font-bold">2 cups</span>
+                <span className="font-bold text-coffee-dark">2 cups</span>
                 <span className="text-sm opacity-80">30g beans + 500ml</span>
               </div>
             </button>
