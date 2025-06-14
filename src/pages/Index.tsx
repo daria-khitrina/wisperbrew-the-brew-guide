@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 
 declare global {
@@ -74,13 +73,6 @@ const Index = () => {
                 <span className="text-sm opacity-80">30g beans + 500ml</span>
               </div>
             </button>
-          </div>
-          
-          <div className="mt-8">
-            <div className="progress-bar max-w-sm mx-auto mb-4">
-              <div className="progress-fill" style={{ width: '0%' }}></div>
-            </div>
-            <div id="home-timer-display" className="timer-display">00:00</div>
           </div>
         </div>
 
