@@ -1,9 +1,26 @@
 
+import { useEffect } from 'react';
+
 const Index = () => {
+  useEffect(() => {
+    // Load the script dynamically
+    const script = document.createElement('script');
+    script.src = '/src/script.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      // Cleanup script on unmount
+      document.body.removeChild(script);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="container">
-        <div className="text-center space-y-8 p-8 fade-in">
+        
+        {/* Home Screen */}
+        <div id="home-screen" className="text-center space-y-8 p-8 fade-in">
           <div className="space-y-4 mb-8">
             <h1 className="text-hero mb-2">☕</h1>
             <h1 className="text-hero text-coffee-dark">WhisperBrew</h1>
@@ -38,6 +55,60 @@ const Index = () => {
             <div className="timer-display">00:00</div>
           </div>
         </div>
+
+        {/* Brewing Screen */}
+        <div id="brewing-screen" className="text-center space-y-8 p-8" style={{ display: 'none' }}>
+          <div className="space-y-4 mb-8">
+            <h1 className="text-hero text-coffee-dark">Brewing</h1>
+            <div id="step-counter" className="text-xl text-coffee-medium">Step 1 of 5</div>
+          </div>
+          
+          <div className="coffee-gradient p-6 rounded-xl shadow-lg max-w-md mx-auto card">
+            <h2 id="step-instruction" className="text-cream text-xl font-semibold mb-2">☕ Bloom</h2>
+            <p id="step-description" className="text-cream text-lg mb-4">Pour 30ml hot water in circular motion</p>
+            <div className="text-cream text-sm">
+              Total water: <span id="water-amount" className="font-semibold">30ml</span>
+            </div>
+          </div>
+          
+          <div className="mt-8">
+            <div className="progress-bar max-w-sm mx-auto mb-4">
+              <div className="progress-fill" style={{ width: '0%' }}></div>
+            </div>
+            <div className="timer-display">00:30</div>
+          </div>
+          
+          <button className="btn btn-secondary reset-btn" data-action="reset">
+            Reset
+          </button>
+        </div>
+
+        {/* Complete Screen */}
+        <div id="complete-screen" className="text-center space-y-8 p-8" style={{ display: 'none' }}>
+          <div className="space-y-4 mb-8">
+            <h1 className="text-hero mb-2">🎉</h1>
+            <h1 className="text-hero text-coffee-dark">Perfect!</h1>
+            <p className="text-xl text-coffee-medium">Your coffee is ready to enjoy</p>
+          </div>
+          
+          <div className="coffee-gradient p-6 rounded-xl shadow-lg max-w-md mx-auto card">
+            <p className="text-cream text-lg">
+              Your pour-over coffee has been brewed to perfection. Enjoy your cup!
+            </p>
+          </div>
+          
+          <div className="mt-8">
+            <div className="progress-bar max-w-sm mx-auto mb-4">
+              <div className="progress-fill" style={{ width: '100%' }}></div>
+            </div>
+            <div className="timer-display">Done</div>
+          </div>
+          
+          <button className="btn btn-primary btn-large" data-action="reset">
+            Brew Another Cup
+          </button>
+        </div>
+
       </div>
     </div>
   );
