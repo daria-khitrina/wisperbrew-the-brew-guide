@@ -78,12 +78,6 @@ const Index = () => {
     }
   };
 
-  // Debug: View final page button
-  const handleViewFinalPage = () => {
-    if (window.WhisperBrew && window.WhisperBrew.showScreen) {
-      window.WhisperBrew.showScreen('complete');
-    }
-  };
   return <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="container">
         {/* Home Screen */}
@@ -104,12 +98,6 @@ const Index = () => {
                 <span className="font-bold text-coffee-dark text-xl">2 cups</span>
                 <span className="text-sm text-coffee-medium">30g beans + 500ml</span>
               </div>
-            </button>
-          </div>
-          {/* Debug button: View final page */}
-          <div className="flex flex-col items-end w-full mt-2">
-            <button type="button" className="py-1 px-3 text-xs rounded bg-muted text-coffee-medium border border-gray-200 shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all outline-none focus-visible:ring-2 focus-visible:ring-accent" onClick={handleViewFinalPage} aria-label="View final page (debug)">
-              View Final Page
             </button>
           </div>
         </div>
