@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 declare global {
   interface Window {
@@ -94,9 +95,10 @@ const Index = () => {
         </div>
 
         {/* Brewing Screen */}
-        <div id="brewing-screen" style={{
-        display: 'none'
-      }} className="flex flex-col flex h-screen max-w-md mx-auto py-8 px-6 md:bg-white md:rounded-3xl md:shadow-md h-full">
+        <div id="brewing-screen"
+          style={{ display: 'none' }}
+          className="flex flex-col justify-between h-screen max-w-md mx-auto px-6 md:bg-white md:rounded-3xl md:shadow-md"
+        >
           {/* Progress bar at the top */}
           <div className="w-full">
             <div className="brew-progress-bar bg-[#e5eaf2] rounded-full h-3 w-full relative overflow-hidden shadow-xs">
@@ -107,7 +109,7 @@ const Index = () => {
           </div>
 
           {/* Grouped instruction (h2) and timer, 40px gap */}
-          <div className="flex flex-col items-center justify-center gap-10 py-8">
+          <div className="flex flex-col items-center justify-center gap-10">
             <h2 id="step-instruction" className="font-bold text-2xl text-black text-center tracking-tight min-h-[4.5rem]">
               Pour 50ml of water to bloom
             </h2>
@@ -123,7 +125,6 @@ const Index = () => {
             Reset
           </button>
         </div>
-
         {/* Complete Screen */}
         <div id="complete-screen" style={{
         display: 'none'
