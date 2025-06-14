@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { runConfetti } from '../lib/confetti';
 declare global {
   interface Window {
@@ -20,25 +20,52 @@ declare global {
   }
 }
 const Index = () => {
+  const [isBrewingReady, setIsBrewingReady] = useState(false);
+
   useEffect(() => {
-    // Force reload script.js with a cache-busting query param
     const timestamp = Date.now();
     const script = document.createElement('script');
     script.src = `/src/script.js?t=${timestamp}`;
-    script.async = false;
-    script.onload = () => {
-      console.log("script.js loaded with cache buster", script.src);
+    script.async = true;
+
+    let intervalId: number | undefined;
+    let timeoutId: number | undefined;
+
+    const checkForWhisperBrew = () => {
       if (window.WhisperBrew) {
-        console.log("WhisperBrew is loaded (from Index.tsx Effect)");
-      } else {
-        console.error("WhisperBrew not loaded after injecting script.js");
+        console.log("WhisperBrew is loaded and ready.");
+        setIsBrewingReady(true);
+        if (intervalId) clearInterval(intervalId);
+        if (timeoutId) clearTimeout(timeoutId);
       }
     };
+
+    script.onload = () => {
+      console.log("script.js loaded, polling for WhisperBrew object...");
+      intervalId = window.setInterval(checkForWhisperBrew, 100);
+    };
+
+    script.onerror = () => {
+      console.error("Failed to load script.js");
+      if (timeoutId) clearTimeout(timeoutId);
+      if (intervalId) clearInterval(intervalId);
+    };
+
     document.head.appendChild(script);
+
+    timeoutId = window.setTimeout(() => {
+      if (!window.WhisperBrew) {
+        console.error("WhisperBrew did not load within 5 seconds.");
+        if (intervalId) clearInterval(intervalId);
+      }
+    }, 5000);
+
     return () => {
       if (script.parentNode) {
         script.parentNode.removeChild(script);
       }
+      if (intervalId) clearInterval(intervalId);
+      if (timeoutId) clearTimeout(timeoutId);
     };
   }, []);
   useEffect(() => {
@@ -87,13 +114,13 @@ const Index = () => {
             <p className="text-lg md:text-xl text-coffee-medium">Perfect pour-over coffee timing</p>
           </div>
           <div className="flex flex-col gap-4 w-full">
-            <button className="w-full py-6 px-8 bg-background border border-gray-200 rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all duration-300" onClick={() => handleCupSelection('1-cup')}>
+            <button className="w-full py-6 px-8 bg-background border border-gray-200 rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => handleCupSelection('1-cup')} disabled={!isBrewingReady}>
               <div className="flex flex-col items-center gap-1">
                 <span className="font-bold text-coffee-dark text-xl">1 cup</span>
                 <span className="text-sm text-coffee-medium">15g beans + 250ml</span>
               </div>
             </button>
-            <button className="w-full py-6 px-8 bg-background border border-gray-200 rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all duration-300" onClick={() => handleCupSelection('2-cup')}>
+            <button className="w-full py-6 px-8 bg-background border border-gray-200 rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => handleCupSelection('2-cup')} disabled={!isBrewingReady}>
               <div className="flex flex-col items-center gap-1">
                 <span className="font-bold text-coffee-dark text-xl">2 cups</span>
                 <span className="text-sm text-coffee-medium">30g beans + 500ml</span>
