@@ -83,9 +83,9 @@ const Index = () => {
         </div>
 
         {/* Brewing Screen */}
-        <div id="brewing-screen" className="flex flex-col items-center justify-center min-h-[420px] max-w-md mx-auto px-6 py-10 md:bg-white md:rounded-3xl md:shadow-md" style={{
+        <div id="brewing-screen" style={{
         display: 'none'
-      }}>
+      }} className="flex flex-col items-center justify-center min-h-[420px] max-w-md mx-auto py-10 md:bg-white md:rounded-3xl md:shadow-md px-[24px]">
           {/* Step instruction */}
           <h2 id="step-instruction" className="font-bold text-2xl text-black text-center tracking-tight mb-16 min-h-[4.5rem]">
             {/* JS will set this text */}
