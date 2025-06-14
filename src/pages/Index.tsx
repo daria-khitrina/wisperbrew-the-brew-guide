@@ -11,7 +11,6 @@ declare global {
       updateProgress: (percentage: number) => void;
       displayStep: (stepData: any) => void;
       resetBrewing: () => void;
-      getCurrentStep: () => any;
       getTimerState: () => { remainingTime: number; isTimerRunning: boolean; currentStepIndex: number };
       getTotalProgress: () => number;
     };
@@ -99,32 +98,61 @@ const Index = () => {
         </div>
 
         {/* Brewing Screen */}
-        <div id="brewing-screen" className="text-center space-y-8 p-8" style={{ display: 'none' }}>
-          <div className="space-y-4 mb-8">
-            <h1 className="text-hero text-coffee-dark">Brewing</h1>
-            {/* The actual step count will be set by script.js */}
-            <div id="step-counter" className="text-xl text-coffee-medium">Step 1 of 12</div>
+        <div
+          id="brewing-screen"
+          className="flex flex-col items-center justify-center min-h-[420px] max-w-md mx-auto px-6 py-10 bg-white rounded-3xl shadow-md gap-8"
+          style={{ display: 'none' }}
+        >
+          <div className="w-full flex flex-col items-center gap-4">
+            {/* Step instruction */}
+            <h2
+              id="step-instruction"
+              className="font-bold text-2xl text-black text-center tracking-tight"
+            >
+              {/* JS will set this text */}
+              ☕ Pour to Bloom
+            </h2>
+            {/* Step description (smaller) */}
+            <p
+              id="step-description"
+              className="text-base text-gray-700 text-center"
+            >
+              {/* JS will set this text */}
+              Pour 50ml of water (20%)
+            </p>
           </div>
-          
-          <div className="coffee-gradient p-6 rounded-xl shadow-lg max-w-md mx-auto card">
-            {/* Headers will be dynamically set by script.js for each step */}
-            <h2 id="step-instruction" className="text-cream text-xl font-semibold mb-2">☕ Pour to Bloom</h2>
-            <p id="step-description" className="text-cream text-lg mb-4">Pour 50ml of water (20%)</p>
-            <div className="text-cream text-sm">
-              Total water: <span id="water-amount" className="font-semibold">50ml</span>
+
+          {/* Progress timeline (blue bar) */}
+          <div className="w-full flex flex-col items-center gap-2">
+            <div className="w-full">
+              <div className="brew-progress-bar bg-[#e5eaf2] rounded-full h-3 w-full relative overflow-hidden shadow-xs">
+                <div
+                  className="brew-progress-fill absolute left-0 top-0 h-3 bg-[#3B82F6] transition-all duration-300"
+                  style={{ width: '0%' }}
+                ></div>
+              </div>
+            </div>
+            <div id="step-counter" className="text-sm text-gray-500 mt-1 tracking-wide">
+              Step 1 of 12
             </div>
           </div>
-          
-          <div className="mt-8">
-            <div className="progress-bar max-w-sm mx-auto mb-4">
-              <div className="progress-fill" style={{ width: '0%' }}></div>
+
+          {/* Timer */}
+          <div className="flex flex-col items-center">
+            <div
+              id="brewing-timer-display"
+              className="brew-timer text-black font-bold tracking-tight text-[3rem] leading-none"
+              style={{
+                letterSpacing: '0.01em',
+              }}
+            >
+              00:10
             </div>
-            {/* Timer will be set by script.js */}
-            <div id="brewing-timer-display" className="timer-display">00:10</div>
           </div>
-          
-          <button 
-            className="btn btn-secondary reset-btn" 
+
+          {/* Reset Button */}
+          <button
+            className="brew-reset-btn mt-4 w-full max-w-[280px] py-3 px-8 bg-white border border-gray-200 text-black font-semibold rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all text-lg"
             onClick={handleReset}
           >
             Reset
