@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 declare global {
   interface Window {
@@ -95,10 +94,9 @@ const Index = () => {
         </div>
 
         {/* Brewing Screen */}
-        <div id="brewing-screen"
-          style={{ display: 'none' }}
-          className="flex flex-col justify-between h-screen max-w-md mx-auto px-6 md:bg-white md:rounded-3xl md:shadow-md"
-        >
+        <div id="brewing-screen" style={{
+        display: 'none'
+      }} className="flex flex-col justify-between h-screen max-w-md mx-auto px-6 md:bg-white md:rounded-3xl md:shadow-md">
           {/* Progress bar at the top */}
           <div className="w-full">
             <div className="brew-progress-bar bg-[#e5eaf2] rounded-full h-3 w-full relative overflow-hidden shadow-xs">
@@ -121,7 +119,7 @@ const Index = () => {
           </div>
 
           {/* Button at the bottom */}
-          <button className="brew-reset-btn w-full max-w-[280px] py-3 px-8 bg-white border border-gray-200 text-black font-semibold rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all text-lg" onClick={handleReset}>
+          <button onClick={handleReset} className="brew-reset-btn w-full py-3 px-8 bg-white border border-gray-200 text-black font-semibold rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all text-lg">
             Reset
           </button>
         </div>
