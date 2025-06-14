@@ -107,7 +107,7 @@ const Index = () => {
           </div>
 
           {/* Grouped instruction (h2) and timer, 40px gap */}
-          <div className="flex flex-col items-center justify-center gap-3">
+          <div className="flex flex-col items-center justify-center gap-3 py-50">
             <h2 id="step-instruction" className="font-bold text-2xl text-black text-center tracking-tight">
               Pour 50ml of water to bloom
             </h2>
