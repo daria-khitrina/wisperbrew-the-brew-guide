@@ -1,5 +1,5 @@
-
-import { useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import BrewCarousel from "../components/BrewCarousel";
 
 declare global {
   interface Window {
@@ -19,17 +19,31 @@ declare global {
 }
 
 const Index = () => {
+  // State for brewing steps and active index
+  const [steps, setSteps] = useState<any[]>([]);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [timer, setTimer] = useState("00:00");
+  const [stepProgress, setStepProgress] = useState(0);
+  const [brewing, setBrewing] = useState(false);
+  const brewingPollRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
-    // Force reload script.js with a cache-busting query param
+    // Load script.js with bust param, only once
     const timestamp = Date.now();
     const script = document.createElement('script');
     script.src = `/src/script.js?t=${timestamp}`;
     script.async = false;
     script.onload = () => {
+      // Force reload script.js with a cache-busting query param
       console.log("script.js loaded with cache buster", script.src);
-      // Optionally log recipe info for the dev
+      // Verify Brew recipes in loaded script
       if (window.WhisperBrew) {
         console.log("WhisperBrew is loaded (from Index.tsx Effect)");
+        // Optionally log recipe info for the dev
+        if (window.WhisperBrew.getCurrentStep) {
+          const stepInfo = window.WhisperBrew.getCurrentStep();
+          console.log("Initial step info:", stepInfo);
+        }
       } else {
         console.error("WhisperBrew not loaded after injecting script.js");
       }
@@ -40,6 +54,70 @@ const Index = () => {
       if (script.parentNode) {
         script.parentNode.removeChild(script);
       }
+    };
+  }, []);
+
+  // Subscribe to recipe/step changes
+  useEffect(() => {
+    if (!(window.WhisperBrew && window.WhisperBrew.getCurrentStep)) return;
+
+    // Poll the state every 200ms to get brewing info for carousel
+    function pollBrew() {
+      const state = window.WhisperBrew!.getTimerState();
+      const currStep = window.WhisperBrew!.getCurrentStep();
+      // Programmatically extract recipe for carousel
+      let recipe: any[] = [];
+      if (currStep) {
+        // Recipe for the current brew is the array containing this step as reference
+        // We'll try to access the whole recipe by backtracing step numbers
+        // NOTE: As script.js holds a private recipe, we infer it from step counts
+        // So we'll synthesize step items for the carousel (mirroring script.js arrays)
+        // Since currentStep.step reports the real number, always 1-indexed
+        // We'll build dummy placeholder steps if not present
+        const maxSteps = 12;
+        for (let k = 1; k <= maxSteps; k++) {
+          if (currStep.step === k) {
+            recipe.push(currStep);
+          } else {
+            // Placeholder -- actual step content for carousel visual
+            recipe.push({
+              step: k,
+              instruction: k === currStep.step ? currStep.instruction : `Step ${k}`,
+              description: k === currStep.step ? currStep.description : "",
+              duration: k === currStep.step ? currStep.duration : 0,
+              totalWater: k === currStep.step ? currStep.totalWater : "",
+            });
+          }
+        }
+        setSteps(recipe);
+        setCurrentStepIndex(currStep.step ? currStep.step - 1 : 0);
+      } else {
+        setSteps([]);
+        setCurrentStepIndex(0);
+      }
+      // Timer and progress
+      if (typeof state.remainingTime === "number" && currStep?.duration) {
+        const remaining = Math.max(0, state.remainingTime);
+        const timerString = `${String(Math.floor(remaining / 60)).padStart(2, '0')}:${String(Math.floor(remaining % 60)).padStart(2, '0')}`;
+        setTimer(timerString);
+        const progress = 100 - (remaining / currStep.duration) * 100;
+        setStepProgress(progress);
+      } else {
+        setTimer("--:--");
+        setStepProgress(0);
+      }
+      // Update brewing status
+      setBrewing(state.isTimerRunning);
+    }
+
+    if (brewingPollRef.current) clearInterval(brewingPollRef.current);
+    brewingPollRef.current = setInterval(pollBrew, 200);
+
+    // Initial call to seed UI
+    pollBrew();
+
+    return () => {
+      if (brewingPollRef.current) clearInterval(brewingPollRef.current);
     };
   }, []);
 
@@ -60,9 +138,6 @@ const Index = () => {
       console.error('WhisperBrew not available');
     }
   };
-
-  // UI: We'll move timer/progress logic to the window.WhisperBrew-managed DOM updates.
-  // Nothing to change in state here.
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
@@ -96,30 +171,17 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Brewing Screen - SIMPLIFIED */}
-        <div id="brewing-screen" className="text-center flex flex-col space-y-8 py-12 max-w-md mx-auto fade-in brewing-redesign-v2" style={{ display: 'none' }}>
-          {/* Step instruction will be set by script.js */}
-          <div className="mb-2">
-            <h2 id="step-instruction" className="brew-instruction">
-              {/* "☕ Pour to Bloom" */}
-              Step
-            </h2>
+        {/* Brewing Screen */}
+        <div id="brewing-screen" className="text-center space-y-8 p-0" style={{ display: 'none' }}>
+          <div className="pt-6 pb-4 px-1 max-w-2xl mx-auto">
+            <BrewCarousel
+              steps={steps}
+              currentStepIndex={currentStepIndex}
+              timerString={timer}
+              onReset={handleReset}
+              stepProgress={stepProgress}
+            />
           </div>
-          {/* Blue progress bar */}
-          <div className="blue-progress-bar mb-6">
-            <div className="blue-progress-fill" style={{ width: '0%' }} id="brewing-progress-bar"></div>
-          </div>
-          {/* Timer */}
-          <div className="brew-timer-ui flex-1 flex flex-col items-center justify-center">
-            <span id="brewing-timer-display" className="brew-timer">00:10</span>
-          </div>
-          {/* Reset button */}
-          <button
-            className="brew-reset-btn"
-            onClick={handleReset}
-          >
-            Reset
-          </button>
         </div>
 
         {/* Complete Screen */}

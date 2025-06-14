@@ -108,79 +108,18 @@
   .cream-gradient {
     background: linear-gradient(135deg, rgb(var(--ids__background-RGB)), rgb(var(--ids__surface-RGB)));
   }
-}
 
-/* Brew Screen Redesign V2 */
+  /* Add blue progress bar for step cards */
+  .progress-bar-blue {
+    background-color: #e3f0ff !important;
+    height: 6px;
+    border-radius: 3px;
+  }
 
-.brewing-redesign-v2 {
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 6px 28px rgba(36, 64, 145, 0.05);
-  padding: 48px 16px 36px 16px;
-}
-
-.brew-instruction {
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: #232e40;
-  line-height: 1.25;
-  margin-bottom: 0.5rem;
-  letter-spacing: -0.01em;
-  text-align: center;
-}
-
-.blue-progress-bar {
-  width: 100%;
-  height: 7px;
-  background: #e5ecfa;
-  border-radius: 7px;
-  overflow: hidden;
-  margin: 0 auto;
-  max-width: 320px;
-  position: relative;
-}
-
-.blue-progress-fill {
-  background: linear-gradient(90deg, #3B82F6 0%, #60a5fa 100%);
-  height: 100%;
-  width: 0;
-  border-radius: 7px;
-  transition: width 0.24s cubic-bezier(.4,0,.2,1);
-}
-
-.brew-timer-ui {
-  margin: 24px 0 12px 0;
-}
-
-.brew-timer {
-  display: block;
-  font-size: clamp(2.75rem, 10vw, 5.25rem);
-  line-height: 1.08;
-  color: #232e40;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  font-variant-numeric: tabular-nums;
-  margin: 0 auto 0.75rem auto;
-  font-family: 'PT Root UI', 'Inter', Arial, sans-serif;
-}
-
-.brew-reset-btn {
-  margin-top: 16px;
-  background: none;
-  border: 1.8px solid #D6E1F7;
-  color: #4c678c;
-  font-size: 1.06rem;
-  font-weight: 500;
-  border-radius: 21px;
-  padding: 0.7em 2.3em;
-  cursor: pointer;
-  transition: all 0.18s cubic-bezier(.49,.6,.51,1.21);
-  box-shadow: none;
-}
-
-.brew-reset-btn:hover, .brew-reset-btn:focus-visible {
-  border-color: #3B82F6;
-  background: #f2f7fd;
-  color: #1d3557;
-  outline: none;
+  .progress-fill-blue {
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+    border-radius: 3px;
+    height: 100%;
+    transition: width 0.3s ease;
+  }
 }
