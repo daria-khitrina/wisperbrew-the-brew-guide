@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-
 declare global {
   interface Window {
     WhisperBrew?: {
@@ -10,12 +9,15 @@ declare global {
       updateProgress: (percentage: number) => void;
       displayStep: (stepData: any) => void;
       resetBrewing: () => void;
-      getTimerState: () => { remainingTime: number; isTimerRunning: boolean; currentStepIndex: number };
+      getTimerState: () => {
+        remainingTime: number;
+        isTimerRunning: boolean;
+        currentStepIndex: number;
+      };
       getTotalProgress: () => number;
     };
   }
 }
-
 const Index = () => {
   useEffect(() => {
     // Force reload script.js with a cache-busting query param
@@ -33,14 +35,12 @@ const Index = () => {
       }
     };
     document.head.appendChild(script);
-
     return () => {
       if (script.parentNode) {
         script.parentNode.removeChild(script);
       }
     };
   }, []);
-
   const handleCupSelection = (cupSize: string) => {
     console.log(`Button clicked for ${cupSize}`);
     if (window.WhisperBrew && window.WhisperBrew.startBrewing) {
@@ -49,7 +49,6 @@ const Index = () => {
       console.error('WhisperBrew not available');
     }
   };
-
   const handleReset = () => {
     console.log('Reset button clicked');
     if (window.WhisperBrew && window.WhisperBrew.resetBrewing) {
@@ -58,31 +57,23 @@ const Index = () => {
       console.error('WhisperBrew not available');
     }
   };
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
+  return <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="container">
         {/* Home Screen */}
-        <div id="home-screen" className="text-center space-y-12 p-8 fade-in max-w-md mx-auto">
-          <div className="space-y-6">
-            <h1 className="text-5xl md:text-6xl font-bold text-coffee-dark">Wisperbrew</h1>
+        <div id="home-screen" className="text-center space-y-12 p-8 fade-in max-w-md mx-auto py-0 px-0">
+          <div className="flex flex-col w-full">
+            <h1 className="text-5xl md:text-6xl font-bold text-coffee-dark text-center">Wisperbrew</h1>
             <p className="text-lg md:text-xl text-coffee-medium">Perfect pour-over coffee timing</p>
           </div>
           
-          <div className="flex flex-col gap-6 w-full">
-            <button 
-              className="w-full py-6 px-8 bg-background border border-gray-200 rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all duration-300"
-              onClick={() => handleCupSelection('1-cup')}
-            >
+          <div className="flex flex-col gap-4 w-full">
+            <button className="w-full py-6 px-8 bg-background border border-gray-200 rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all duration-300" onClick={() => handleCupSelection('1-cup')}>
               <div className="flex flex-col items-center gap-1">
                 <span className="font-bold text-coffee-dark text-xl">1 cup</span>
                 <span className="text-sm text-coffee-medium">15g beans + 250ml</span>
               </div>
             </button>
-            <button 
-              className="w-full py-6 px-8 bg-background border border-gray-200 rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all duration-300"
-              onClick={() => handleCupSelection('2-cup')}
-            >
+            <button className="w-full py-6 px-8 bg-background border border-gray-200 rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all duration-300" onClick={() => handleCupSelection('2-cup')}>
               <div className="flex flex-col items-center gap-1">
                 <span className="font-bold text-coffee-dark text-xl">2 cups</span>
                 <span className="text-sm text-coffee-medium">30g beans + 500ml</span>
@@ -92,16 +83,11 @@ const Index = () => {
         </div>
 
         {/* Brewing Screen */}
-        <div
-          id="brewing-screen"
-          className="flex flex-col items-center justify-center min-h-[420px] max-w-md mx-auto px-6 py-10 md:bg-white md:rounded-3xl md:shadow-md"
-          style={{ display: 'none' }}
-        >
+        <div id="brewing-screen" className="flex flex-col items-center justify-center min-h-[420px] max-w-md mx-auto px-6 py-10 md:bg-white md:rounded-3xl md:shadow-md" style={{
+        display: 'none'
+      }}>
           {/* Step instruction */}
-          <h2
-            id="step-instruction"
-            className="font-bold text-2xl text-black text-center tracking-tight mb-16 min-h-[4.5rem]"
-          >
+          <h2 id="step-instruction" className="font-bold text-2xl text-black text-center tracking-tight mb-16 min-h-[4.5rem]">
             {/* JS will set this text */}
             Pour 50ml of water to bloom
           </h2>
@@ -109,37 +95,31 @@ const Index = () => {
           {/* Progress timeline (blue bar) */}
           <div className="w-full mb-8">
             <div className="brew-progress-bar bg-[#e5eaf2] rounded-full h-3 w-full relative overflow-hidden shadow-xs">
-              <div
-                className="brew-progress-fill absolute left-0 top-0 h-3 bg-[#3B82F6] transition-all duration-300"
-                style={{ width: '0%' }}
-              ></div>
+              <div className="brew-progress-fill absolute left-0 top-0 h-3 bg-[#3B82F6] transition-all duration-300" style={{
+              width: '0%'
+            }}></div>
             </div>
           </div>
 
           {/* Timer */}
           <div className="flex flex-col items-center">
-            <div
-              id="brewing-timer-display"
-              className="brew-timer text-black font-bold tracking-tight text-[3rem] leading-none"
-              style={{
-                letterSpacing: '0.01em',
-              }}
-            >
+            <div id="brewing-timer-display" className="brew-timer text-black font-bold tracking-tight text-[3rem] leading-none" style={{
+            letterSpacing: '0.01em'
+          }}>
               00:10
             </div>
           </div>
 
           {/* Reset Button */}
-          <button
-            className="brew-reset-btn mt-20 w-full max-w-[280px] py-3 px-8 bg-white border border-gray-200 text-black font-semibold rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all text-lg"
-            onClick={handleReset}
-          >
+          <button className="brew-reset-btn mt-20 w-full max-w-[280px] py-3 px-8 bg-white border border-gray-200 text-black font-semibold rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all text-lg" onClick={handleReset}>
             Reset
           </button>
         </div>
 
         {/* Complete Screen */}
-        <div id="complete-screen" className="text-center space-y-8 p-8" style={{ display: 'none' }}>
+        <div id="complete-screen" className="text-center space-y-8 p-8" style={{
+        display: 'none'
+      }}>
           <div className="space-y-4 mb-8">
             <h1 className="text-hero mb-2">🎉</h1>
             <h1 className="text-hero text-coffee-dark">Perfect!</h1>
@@ -154,21 +134,18 @@ const Index = () => {
           
           <div className="mt-8">
             <div className="progress-bar max-w-sm mx-auto mb-4">
-              <div className="progress-fill" style={{ width: '100%' }}></div>
+              <div className="progress-fill" style={{
+              width: '100%'
+            }}></div>
             </div>
             <div id="complete-timer-display" className="timer-display">Done</div>
           </div>
           
-          <button 
-            className="btn btn-primary btn-large" 
-            onClick={handleReset}
-          >
+          <button className="btn btn-primary btn-large" onClick={handleReset}>
             Brew Another Cup
           </button>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
