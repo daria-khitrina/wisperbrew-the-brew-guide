@@ -137,7 +137,7 @@ const Index = () => {
             <p className="text-coffee-medium text-lg md:text-xl mt-6 mb-12">
               enjoy your cup
             </p>
-            <button className="w-full max-w-xs py-4 px-8 bg-background border border-gray-200 text-coffee-dark font-bold rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all duration-300 text-lg mt-2" onClick={handleReset}>Brew another cup</button>
+            <button className="w-full max-w-xs py-4 px-8 bg-background border border-gray-200 text-coffee-dark font-bold rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all duration-300 text-lg mt-2" onClick={handleReset}>Brew another one</button>
           </div>
         </div>
       </div>
