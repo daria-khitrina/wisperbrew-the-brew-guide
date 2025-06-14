@@ -100,7 +100,7 @@ const Index = () => {
           {/* Step instruction */}
           <h2
             id="step-instruction"
-            className="font-bold text-2xl text-black text-center tracking-tight mb-16"
+            className="font-bold text-2xl text-black text-center tracking-tight mb-16 min-h-[4.5rem]"
           >
             {/* JS will set this text */}
             Pour 50ml of water to bloom
