@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 
 declare global {
@@ -48,37 +49,24 @@ const Index = () => {
       <div className="container">
         
         {/* Home Screen */}
-        <div id="home-screen" className="text-center space-y-8 p-8 fade-in">
-          <div className="space-y-4 mb-8">
-            <h1 className="text-hero mb-2">☕</h1>
-            <h1 className="text-hero text-coffee-dark">WhisperBrew</h1>
+        <div id="home-screen" className="text-center space-y-12 p-8 fade-in max-w-md mx-auto">
+          <div className="space-y-6">
+            <h1 className="text-6xl font-bold text-coffee-dark">Wisperbrew</h1>
             <p className="text-xl text-coffee-medium">Perfect pour-over coffee timing</p>
           </div>
           
-          <div className="coffee-gradient p-6 rounded-xl shadow-lg max-w-md mx-auto card">
-            <p className="text-cream text-lg">
-              Choose your cup size to begin the perfect brewing experience
-            </p>
-          </div>
-          
-          <div className="flex flex-col gap-4 justify-center items-center md:flex-row">
+          <div className="flex flex-col gap-6 w-full">
             <button 
-              className="btn btn-primary btn-large"
+              className="w-full py-6 px-8 border-2 border-coffee-medium rounded-full text-coffee-medium text-xl font-medium hover:bg-coffee-medium hover:text-cream transition-all duration-300"
               onClick={() => handleCupSelection('1-cup')}
             >
-              <div className="text-center">
-                <div className="text-lg font-semibold">1 Cup</div>
-                <div className="text-sm opacity-90">15g coffee • 250ml water</div>
-              </div>
+              1 cup
             </button>
             <button 
-              className="btn btn-secondary btn-large"
+              className="w-full py-6 px-8 border-2 border-coffee-medium rounded-full text-coffee-medium text-xl font-medium hover:bg-coffee-medium hover:text-cream transition-all duration-300"
               onClick={() => handleCupSelection('2-cup')}
             >
-              <div className="text-center">
-                <div className="text-lg font-semibold">2 Cups</div>
-                <div className="text-sm">30g coffee • 500ml water</div>
-              </div>
+              2 cups
             </button>
           </div>
           
