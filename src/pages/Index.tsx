@@ -131,7 +131,7 @@ const Index = () => {
 
           {/* Reset Button */}
           <button
-            className="brew-reset-btn mt-4 w-full max-w-[280px] py-3 px-8 bg-white border border-gray-200 text-black font-semibold rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all text-lg"
+            className="brew-reset-btn mt-16 w-full max-w-[280px] py-3 px-8 bg-white border border-gray-200 text-black font-semibold rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all text-lg"
             onClick={handleReset}
           >
             Reset
