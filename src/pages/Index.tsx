@@ -94,7 +94,7 @@ const Index = () => {
         {/* Brewing Screen */}
         <div
           id="brewing-screen"
-          className="flex flex-col items-center justify-center min-h-[420px] max-w-md mx-auto px-6 py-10 bg-white rounded-3xl shadow-md gap-8"
+          className="flex flex-col items-center justify-center min-h-[420px] max-w-md mx-auto px-6 py-10 gap-8 md:bg-white md:rounded-3xl md:shadow-md"
           style={{ display: 'none' }}
         >
           <div className="w-full flex flex-col items-center gap-4">
