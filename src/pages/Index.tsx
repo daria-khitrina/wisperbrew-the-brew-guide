@@ -60,13 +60,19 @@ const Index = () => {
               className="w-full py-6 px-8 border-2 border-coffee-medium rounded-full text-coffee-medium text-xl font-medium hover:bg-coffee-medium hover:text-cream transition-all duration-300"
               onClick={() => handleCupSelection('1-cup')}
             >
-              1 cup
+              <div className="flex flex-col items-center gap-1">
+                <span className="font-bold">1 cup</span>
+                <span className="text-sm opacity-80">15g beans + 250ml</span>
+              </div>
             </button>
             <button 
               className="w-full py-6 px-8 border-2 border-coffee-medium rounded-full text-coffee-medium text-xl font-medium hover:bg-coffee-medium hover:text-cream transition-all duration-300"
               onClick={() => handleCupSelection('2-cup')}
             >
-              2 cups
+              <div className="flex flex-col items-center gap-1">
+                <span className="font-bold">2 cups</span>
+                <span className="text-sm opacity-80">30g beans + 500ml</span>
+              </div>
             </button>
           </div>
           
