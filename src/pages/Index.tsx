@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 
 declare global {
@@ -29,11 +28,6 @@ const Index = () => {
       // Verify Brew recipes in loaded script
       if (window.WhisperBrew) {
         console.log("WhisperBrew is loaded (from Index.tsx Effect)");
-        // Optionally log recipe info for the dev
-        if (window.WhisperBrew.getCurrentStep) {
-          const stepInfo = window.WhisperBrew.getCurrentStep();
-          console.log("Initial step info:", stepInfo);
-        }
       } else {
         console.error("WhisperBrew not loaded after injecting script.js");
       }
