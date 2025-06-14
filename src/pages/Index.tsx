@@ -94,27 +94,46 @@ const Index = () => {
       </div>
 
       {/* Brewing Screen */}
-      <div id="brewing-screen" style={{
-        display: 'none'
-      }} className="flex flex-col items-center flex min-h-[420px] max-w-md mx-auto py-10 md:bg-white md:rounded-3xl md:shadow-md px-[24px]">
-        <h2 id="step-instruction" className="font-bold text-2xl text-black text-center tracking-tight mb-16 min-h-[4.5rem]">
-          Pour 50ml of water to bloom
-        </h2>
-        <div className="w-full mb-8">
+      <div
+        id="brewing-screen"
+        style={{
+          display: 'none',
+          width: 375,
+          height: 812,
+          padding: '32px 24px',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}
+        className="flex"
+      >
+        {/* Top: Progress Bar */}
+        <div className="w-full">
           <div className="brew-progress-bar bg-[#e5eaf2] rounded-full h-3 w-full relative overflow-hidden shadow-xs">
-            <div className="brew-progress-fill absolute left-0 top-0 h-3 bg-[#3B82F6] transition-all duration-300" style={{
-              width: '0%'
-            }}></div>
+            <div
+              className="brew-progress-fill absolute left-0 top-0 h-3 bg-[#3B82F6] transition-all duration-300"
+              style={{
+                width: '0%',
+              }}
+            ></div>
           </div>
         </div>
-        <div className="flex flex-col items-center">
-          <div id="brewing-timer-display" className="brew-timer text-black font-bold tracking-tight text-[3rem] leading-none" style={{
-            letterSpacing: '0.01em'
-          }}>
+        {/* Center: Instruction + Timer */}
+        <div className="flex flex-col items-center w-full gap-6">
+          <h2
+            id="step-instruction"
+            className="font-bold text-2xl text-black text-center tracking-tight min-h-[4.5rem]"
+          >
+            Pour 50ml of water to bloom
+          </h2>
+          <div className="brew-timer text-black font-bold tracking-tight text-[3rem] leading-none" style={{ letterSpacing: '0.01em' }}>
             00:10
           </div>
         </div>
-        <button className="brew-reset-btn mt-20 w-full max-w-[280px] py-3 px-8 bg-white border border-gray-200 text-black font-semibold rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all text-lg" onClick={handleReset}>
+        {/* Bottom: Reset Button */}
+        <button
+          className="brew-reset-btn w-full max-w-[280px] py-3 px-8 bg-white border border-gray-200 text-black font-semibold rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all text-lg"
+          onClick={handleReset}
+        >
           Reset
         </button>
       </div>
