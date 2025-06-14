@@ -174,27 +174,17 @@ if (!window.WhisperBrew) {
     updateTimer();
   }
 
-  // Utility: Haptic feedback
-  function triggerHaptic(pattern = 100) {
-    if (typeof window !== 'undefined' && navigator.vibrate) {
-      navigator.vibrate(pattern);
-    }
-  }
-
   function stepComplete() {
     console.log(`Step ${currentStepIndex + 1} complete (of total ${currentRecipe.length})`);
-
-    // Haptic feedback: short buzz for step completion
-    triggerHaptic();
-
+    
     isTimerRunning = false;
     if (timerInterval) {
       clearInterval(timerInterval);
       timerInterval = null;
     }
-
+    
     currentStepIndex++;
-
+    
     setTimeout(() => {
       nextStep();
     }, 800);
@@ -207,17 +197,14 @@ if (!window.WhisperBrew) {
       clearInterval(timerInterval);
       timerInterval = null;
     }
-
-    // Haptic feedback: double buzz for brewing completion
-    triggerHaptic([100, 50, 100]);
-
+    
     updateProgress(100);
 
     const completeTimerDisplay = document.getElementById('complete-timer-display');
     if (completeTimerDisplay) {
       completeTimerDisplay.textContent = 'Done';
     }
-
+    
     showScreen('complete');
   }
 
