@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 declare global {
   interface Window {
@@ -64,7 +63,6 @@ const Index = () => {
       window.WhisperBrew.showScreen('complete');
     }
   };
-
   return <div className="min-h-screen flex items-center justify-center bg-background">
     <div className="container">
       {/* Home Screen */}
@@ -89,12 +87,7 @@ const Index = () => {
         </div>
         {/* Debug button: View final page */}
         <div className="flex flex-col items-end w-full mt-2">
-          <button
-            type="button"
-            className="py-1 px-3 text-xs rounded bg-muted text-coffee-medium border border-gray-200 shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            onClick={handleViewFinalPage}
-            aria-label="View final page (debug)"
-          >
+          <button type="button" className="py-1 px-3 text-xs rounded bg-muted text-coffee-medium border border-gray-200 shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all outline-none focus-visible:ring-2 focus-visible:ring-accent" onClick={handleViewFinalPage} aria-label="View final page (debug)">
             View Final Page
           </button>
         </div>
@@ -127,22 +120,19 @@ const Index = () => {
       </div>
 
       {/* Complete Screen */}
-      <div
-        id="complete-screen"
-        className="flex flex-col items-center justify-center fade-in min-h-[50vh] p-8"
-        style={{ display: 'none' }}
-      >
-        <div className="flex flex-col items-center justify-center w-full max-w-lg mx-auto pt-6 pb-10">
-          <h1 className="font-bold text-4xl md:text-5xl text-coffee-dark" style={{ letterSpacing: '-0.02em' }}>
+      <div id="complete-screen" style={{
+        display: 'none'
+      }} className="flex flex-col items-center justify-center fade-in min-h-[50vh] p-8 px-0">
+        <div className="flex flex-col items-center justify-center w-full max-w-lg mx-auto pt-6 pb-10 py-0">
+          <h1 style={{
+            letterSpacing: '-0.02em'
+          }} className="font-bold md:text-5xl text-coffee-dark text-center text-6xl">
             Brew is complete
           </h1>
           <p className="text-coffee-medium text-lg md:text-xl mt-6 mb-12">
             enjoy your cup
           </p>
-          <button
-            className="w-full max-w-xs py-4 px-8 bg-background border border-gray-200 text-coffee-dark font-bold rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all duration-300 text-lg mt-2"
-            onClick={handleReset}
-          >
+          <button className="w-full max-w-xs py-4 px-8 bg-background border border-gray-200 text-coffee-dark font-bold rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all duration-300 text-lg mt-2" onClick={handleReset}>
             Brew Another Cup
           </button>
         </div>
@@ -150,5 +140,4 @@ const Index = () => {
     </div>
   </div>;
 };
-
 export default Index;
