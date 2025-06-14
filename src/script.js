@@ -1,23 +1,35 @@
 
-// Brewing recipe data
+// Enhanced brewing recipe data with 11 detailed steps
 const BREWING_RECIPES = {
   oneCup: [
-    { step: 1, instruction: "☕ Bloom", description: "Pour 30ml hot water in circular motion", duration: 30, totalWater: 30 },
-    { step: 2, instruction: "First Pour", description: "Pour water to 100ml total", duration: 30, totalWater: 100 },
-    { step: 3, instruction: "Second Pour", description: "Pour water to 170ml total", duration: 30, totalWater: 170 },
-    { step: 4, instruction: "Final Pour", description: "Pour water to 250ml total", duration: 30, totalWater: 250 },
-    { step: 5, instruction: "Finish", description: "Let coffee drip completely", duration: 60, totalWater: 250 }
+    { step: 1, instruction: "☕ Pre-wet Filter", description: "Rinse paper filter with hot water", duration: 10, totalWater: 0, action: "Pre-wet filter", volume: null },
+    { step: 2, instruction: "Add Coffee", description: "Add 15g ground coffee to filter", duration: 10, totalWater: 0, action: "Add coffee grounds", volume: null },
+    { step: 3, instruction: "Bloom Pour", description: "Pour 30ml hot water in slow circular motion", duration: 30, totalWater: 30, action: "Pour to bloom", volume: "30ml" },
+    { step: 4, instruction: "Bloom Rest", description: "Let coffee bloom and degas", duration: 15, totalWater: 30, action: "Wait for bloom", volume: null },
+    { step: 5, instruction: "First Pour", description: "Pour water slowly to 100ml total", duration: 20, totalWater: 100, action: "Pour slowly", volume: "70ml" },
+    { step: 6, instruction: "First Rest", description: "Let water drip through", duration: 10, totalWater: 100, action: "Let drip", volume: null },
+    { step: 7, instruction: "Second Pour", description: "Pour water to 170ml total", duration: 20, totalWater: 170, action: "Pour in center", volume: "70ml" },
+    { step: 8, instruction: "Second Rest", description: "Allow even extraction", duration: 10, totalWater: 170, action: "Wait for drip", volume: null },
+    { step: 9, instruction: "Final Pour", description: "Pour remaining water to 250ml", duration: 20, totalWater: 250, action: "Final pour", volume: "80ml" },
+    { step: 10, instruction: "Final Drip", description: "Let all water drip through", duration: 30, totalWater: 250, action: "Complete drip", volume: null },
+    { step: 11, instruction: "Complete", description: "Remove filter and enjoy!", duration: 5, totalWater: 250, action: "Finish brewing", volume: null }
   ],
   twoCup: [
-    { step: 1, instruction: "☕ Bloom", description: "Pour 60ml hot water in circular motion", duration: 30, totalWater: 60 },
-    { step: 2, instruction: "First Pour", description: "Pour water to 200ml total", duration: 30, totalWater: 200 },
-    { step: 3, instruction: "Second Pour", description: "Pour water to 340ml total", duration: 30, totalWater: 340 },
-    { step: 4, instruction: "Final Pour", description: "Pour water to 500ml total", duration: 30, totalWater: 500 },
-    { step: 5, instruction: "Finish", description: "Let coffee drip completely", duration: 60, totalWater: 500 }
+    { step: 1, instruction: "☕ Pre-wet Filter", description: "Rinse paper filter with hot water", duration: 10, totalWater: 0, action: "Pre-wet filter", volume: null },
+    { step: 2, instruction: "Add Coffee", description: "Add 30g ground coffee to filter", duration: 10, totalWater: 0, action: "Add coffee grounds", volume: null },
+    { step: 3, instruction: "Bloom Pour", description: "Pour 60ml hot water in slow circular motion", duration: 30, totalWater: 60, action: "Pour to bloom", volume: "60ml" },
+    { step: 4, instruction: "Bloom Rest", description: "Let coffee bloom and degas", duration: 15, totalWater: 60, action: "Wait for bloom", volume: null },
+    { step: 5, instruction: "First Pour", description: "Pour water slowly to 200ml total", duration: 25, totalWater: 200, action: "Pour slowly", volume: "140ml" },
+    { step: 6, instruction: "First Rest", description: "Let water drip through", duration: 15, totalWater: 200, action: "Let drip", volume: null },
+    { step: 7, instruction: "Second Pour", description: "Pour water to 340ml total", duration: 25, totalWater: 340, action: "Pour in center", volume: "140ml" },
+    { step: 8, instruction: "Second Rest", description: "Allow even extraction", duration: 15, totalWater: 340, action: "Wait for drip", volume: null },
+    { step: 9, instruction: "Final Pour", description: "Pour remaining water to 500ml", duration: 25, totalWater: 500, action: "Final pour", volume: "160ml" },
+    { step: 10, instruction: "Final Drip", description: "Let all water drip through", duration: 45, totalWater: 500, action: "Complete drip", volume: null },
+    { step: 11, instruction: "Complete", description: "Remove filter and enjoy!", duration: 5, totalWater: 500, action: "Finish brewing", volume: null }
   ]
 };
 
-// Global state
+// Enhanced global state with drift correction
 let currentRecipe = [];
 let currentStepIndex = 0;
 let timerInterval = null;
@@ -25,6 +37,8 @@ let remainingTime = 0;
 let totalTime = 0;
 let isTimerRunning = false;
 let currentScreen = 'home';
+let stepStartTime = 0;
+let expectedEndTime = 0;
 
 // Screen management functions
 function showScreen(screenId) {
@@ -53,7 +67,7 @@ function showScreen(screenId) {
   }, 300);
 }
 
-// Brewing logic functions
+// Enhanced brewing logic with drift correction
 function startBrewing(cupSize) {
   console.log(`Starting brewing for ${cupSize} cup(s)`);
   
@@ -61,8 +75,9 @@ function startBrewing(cupSize) {
   currentRecipe = cupSize === '1-cup' ? BREWING_RECIPES.oneCup : BREWING_RECIPES.twoCup;
   currentStepIndex = 0;
   
-  // Calculate total time
+  // Calculate total time for all steps
   totalTime = currentRecipe.reduce((sum, step) => sum + step.duration, 0);
+  console.log(`Total brewing time: ${totalTime} seconds`);
   
   // Show brewing screen
   showScreen('brewing');
@@ -73,27 +88,35 @@ function startBrewing(cupSize) {
   }, 500);
 }
 
+// Enhanced timer with drift correction
 function updateTimer() {
   if (!isTimerRunning || remainingTime <= 0) {
     return;
   }
   
-  remainingTime--;
-  
-  // Update timer display
-  const minutes = Math.floor(remainingTime / 60);
-  const seconds = remainingTime % 60;
-  const timerDisplay = document.querySelector('.timer-display');
-  if (timerDisplay) {
-    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  }
-  
-  // Update progress
+  // Calculate actual time elapsed with drift correction
+  const now = Date.now();
+  const actualElapsed = Math.floor((now - stepStartTime) / 1000);
   const currentStep = currentRecipe[currentStepIndex];
+  
   if (currentStep) {
+    remainingTime = Math.max(0, currentStep.duration - actualElapsed);
+    
+    // Update timer display with drift-corrected time
+    const minutes = Math.floor(remainingTime / 60);
+    const seconds = remainingTime % 60;
+    const timerDisplay = document.querySelector('.timer-display');
+    if (timerDisplay) {
+      timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    // Calculate and update progress
     const stepProgress = ((currentStep.duration - remainingTime) / currentStep.duration) * 100;
-    const overallProgress = ((currentStepIndex / currentRecipe.length) + (stepProgress / 100 / currentRecipe.length)) * 100;
+    const completedSteps = currentStepIndex;
+    const overallProgress = ((completedSteps / currentRecipe.length) + (stepProgress / 100 / currentRecipe.length)) * 100;
     updateProgress(Math.min(overallProgress, 100));
+    
+    console.log(`Step ${currentStepIndex + 1}/${currentRecipe.length}: ${remainingTime}s remaining, Progress: ${overallProgress.toFixed(1)}%`);
   }
   
   // Check if step is complete
@@ -109,20 +132,22 @@ function nextStep() {
   }
   
   const currentStep = currentRecipe[currentStepIndex];
-  console.log(`Step ${currentStep.step}: ${currentStep.instruction}`);
+  console.log(`Starting Step ${currentStep.step}/${currentRecipe.length}: ${currentStep.instruction}`);
+  
+  // Set up drift correction timing
+  stepStartTime = Date.now();
+  expectedEndTime = stepStartTime + (currentStep.duration * 1000);
+  remainingTime = currentStep.duration;
+  isTimerRunning = true;
   
   // Display current step
   displayStep(currentStep);
   
-  // Set timer for this step
-  remainingTime = currentStep.duration;
-  isTimerRunning = true;
-  
-  // Start timer interval
+  // Start high-precision timer interval
   if (timerInterval) {
     clearInterval(timerInterval);
   }
-  timerInterval = setInterval(updateTimer, 1000);
+  timerInterval = setInterval(updateTimer, 100); // Update every 100ms for smoother display
   
   // Initial timer update
   updateTimer();
@@ -144,11 +169,11 @@ function stepComplete() {
   // Auto-progress to next step after brief pause
   setTimeout(() => {
     nextStep();
-  }, 1000);
+  }, 800);
 }
 
 function brewingComplete() {
-  console.log('Brewing complete!');
+  console.log('Brewing complete! Total steps completed:', currentRecipe.length);
   
   // Stop any running timers
   isTimerRunning = false;
@@ -157,41 +182,51 @@ function brewingComplete() {
     timerInterval = null;
   }
   
+  // Update final progress
+  updateProgress(100);
+  
   // Show completion screen
   showScreen('complete');
   
-  // Reset state
+  // Reset state after longer delay for completion appreciation
   setTimeout(() => {
     resetBrewing();
-  }, 5000); // Auto-return to home after 5 seconds
+  }, 10000); // Auto-return to home after 10 seconds
 }
 
 function resetBrewing() {
+  console.log('Resetting brewing state');
+  
   currentRecipe = [];
   currentStepIndex = 0;
   remainingTime = 0;
   totalTime = 0;
   isTimerRunning = false;
+  stepStartTime = 0;
+  expectedEndTime = 0;
   
   if (timerInterval) {
     clearInterval(timerInterval);
     timerInterval = null;
   }
   
+  // Reset progress bar
+  updateProgress(0);
+  
   showScreen('home');
 }
 
-// UI update functions
+// Enhanced UI update functions
 function updateProgress(percentage) {
   const progressFill = document.querySelector('.progress-fill');
   if (progressFill) {
-    progressFill.style.width = `${Math.max(0, Math.min(100, percentage))}%`;
+    const clampedPercentage = Math.max(0, Math.min(100, percentage));
+    progressFill.style.width = `${clampedPercentage}%`;
   }
-  console.log(`Progress updated: ${percentage.toFixed(1)}%`);
 }
 
 function displayStep(stepData) {
-  console.log(`Displaying step: ${stepData.instruction} - ${stepData.description}`);
+  console.log(`Displaying: ${stepData.instruction} - ${stepData.description}`);
   
   // Update step instruction
   const stepInstruction = document.getElementById('step-instruction');
@@ -199,13 +234,17 @@ function displayStep(stepData) {
     stepInstruction.textContent = stepData.instruction;
   }
   
-  // Update step description
+  // Update step description with action and volume info
   const stepDescription = document.getElementById('step-description');
   if (stepDescription) {
-    stepDescription.textContent = stepData.description;
+    let description = stepData.description;
+    if (stepData.volume) {
+      description += ` (${stepData.volume})`;
+    }
+    stepDescription.textContent = description;
   }
   
-  // Update water amount if element exists
+  // Update water amount display
   const waterAmount = document.getElementById('water-amount');
   if (waterAmount) {
     waterAmount.textContent = `${stepData.totalWater}ml`;
@@ -220,7 +259,7 @@ function displayStep(stepData) {
 
 // Initialize event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('WhisperBrew initialized');
+  console.log('WhisperBrew Enhanced Timer System initialized');
   
   // Add event listeners for cup size buttons
   const oneCupBtn = document.querySelector('.btn-primary');
@@ -245,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
   showScreen('home');
 });
 
-// Export functions for external use
+// Export enhanced functions for external use
 window.WhisperBrew = {
   showScreen,
   startBrewing,
@@ -253,5 +292,9 @@ window.WhisperBrew = {
   nextStep,
   updateProgress,
   displayStep,
-  resetBrewing
+  resetBrewing,
+  // Enhanced debugging functions
+  getCurrentStep: () => currentRecipe[currentStepIndex],
+  getTimerState: () => ({ remainingTime, isTimerRunning, currentStepIndex }),
+  getTotalProgress: () => (currentStepIndex / currentRecipe.length) * 100
 };
