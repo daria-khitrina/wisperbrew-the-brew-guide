@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 
 declare global {
@@ -50,29 +49,23 @@ const Index = () => {
         
         {/* Home Screen */}
         <div id="home-screen" className="text-center space-y-12 p-8 fade-in max-w-md mx-auto">
-          <div className="space-y-6">
-            <h1 className="text-6xl font-bold text-coffee-dark">Wisperbrew</h1>
-            <p className="text-xl text-coffee-medium">Perfect pour-over coffee timing</p>
+          <div className="space-y-2">
+            <h1 className="text-5xl sm:text-6xl font-bold text-coffee-dark">Wisperbrew</h1>
+            <p className="text-lg sm:text-xl text-coffee-medium">Perfect pour-over coffee timing</p>
           </div>
           
-          <div className="flex flex-col gap-6 w-full">
+          <div className="flex flex-col gap-4 w-full">
             <button 
-              className="w-full py-6 px-8 border-2 border-coffee-medium rounded-full text-coffee-medium text-xl font-medium hover:bg-coffee-medium hover:text-cream transition-all duration-300"
+              className="w-full py-6 border border-coffee-medium rounded-full text-coffee-dark text-xl font-medium bg-transparent hover:bg-secondary transition-colors"
               onClick={() => handleCupSelection('1-cup')}
             >
-              <div className="flex flex-col items-center gap-1">
-                <span className="font-bold text-coffee-dark">1 cup</span>
-                <span className="text-sm opacity-80">15g beans + 250ml</span>
-              </div>
+              1 cup
             </button>
             <button 
-              className="w-full py-6 px-8 border-2 border-coffee-medium rounded-full text-coffee-medium text-xl font-medium hover:bg-coffee-medium hover:text-cream transition-all duration-300"
+              className="w-full py-6 border border-coffee-medium rounded-full text-coffee-dark text-xl font-medium bg-transparent hover:bg-secondary transition-colors"
               onClick={() => handleCupSelection('2-cup')}
             >
-              <div className="flex flex-col items-center gap-1">
-                <span className="font-bold text-coffee-dark">2 cups</span>
-                <span className="text-sm opacity-80">30g beans + 500ml</span>
-              </div>
+              2 cups
             </button>
           </div>
         </div>
