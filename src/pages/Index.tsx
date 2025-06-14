@@ -96,7 +96,7 @@ const Index = () => {
       {/* Brewing Screen */}
       <div id="brewing-screen" style={{
         display: 'none'
-      }} className="flex flex-col items-center justify-center min-h-[420px] max-w-md mx-auto py-10 md:bg-white md:rounded-3xl md:shadow-md px-[24px]">
+      }} className="flex flex-col items-center flex min-h-[420px] max-w-md mx-auto py-10 md:bg-white md:rounded-3xl md:shadow-md px-[24px]">
         <h2 id="step-instruction" className="font-bold text-2xl text-black text-center tracking-tight mb-16 min-h-[4.5rem]">
           Pour 50ml of water to bloom
         </h2>
