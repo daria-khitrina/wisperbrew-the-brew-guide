@@ -64,7 +64,7 @@ const Index = () => {
     }
   };
   return <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="container">
+      <div className="container py-0">
         {/* Home Screen */}
         <div id="home-screen" className="text-center space-y-12 p-8 fade-in max-w-md mx-auto py-0 px-0">
           <div className="flex flex-col w-full">
@@ -94,19 +94,15 @@ const Index = () => {
         </div>
 
         {/* Brewing Screen */}
-        <div id="brewing-screen"
-          style={{ display: 'none' }}
-          className="flex flex-col h-screen max-h-[812px] w-full max-w-md mx-auto px-6 md:bg-white md:rounded-3xl md:shadow-md justify-between"
-        >
+        <div id="brewing-screen" style={{
+        display: 'none'
+      }} className="flex flex-col h-screen w-full max-w-md mx-auto px-6 md:bg-white md:rounded-3xl md:shadow-md justify-between py-[32px]">
           {/* Progress bar at the top */}
           <div className="w-full pt-6">
             <div className="brew-progress-bar bg-[#e5eaf2] rounded-full h-3 w-full relative overflow-hidden shadow-xs">
-              <div
-                className="brew-progress-fill absolute left-0 top-0 h-3 bg-[#3B82F6] transition-all duration-300"
-                style={{
-                  width: '0%'
-                }}
-              ></div>
+              <div className="brew-progress-fill absolute left-0 top-0 h-3 bg-[#3B82F6] transition-all duration-300" style={{
+              width: '0%'
+            }}></div>
             </div>
           </div>
 
@@ -116,8 +112,8 @@ const Index = () => {
               Pour 50ml of water to bloom
             </h2>
             <div id="brewing-timer-display" className="brew-timer text-black font-bold tracking-tight text-[3rem] leading-none" style={{
-              letterSpacing: '0.01em'
-            }}>
+            letterSpacing: '0.01em'
+          }}>
               00:10
             </div>
           </div>
