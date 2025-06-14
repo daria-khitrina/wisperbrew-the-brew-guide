@@ -27,14 +27,9 @@ const Index = () => {
     script.async = false;
     script.onload = () => {
       console.log("script.js loaded with cache buster", script.src);
-      // Verify Brew recipes in loaded script
+      // Optionally log recipe info for the dev
       if (window.WhisperBrew) {
         console.log("WhisperBrew is loaded (from Index.tsx Effect)");
-        // Optionally log recipe info for the dev
-        if (window.WhisperBrew.getCurrentStep) {
-          const stepInfo = window.WhisperBrew.getCurrentStep();
-          console.log("Initial step info:", stepInfo);
-        }
       } else {
         console.error("WhisperBrew not loaded after injecting script.js");
       }
@@ -65,6 +60,9 @@ const Index = () => {
       console.error('WhisperBrew not available');
     }
   };
+
+  // UI: We'll move timer/progress logic to the window.WhisperBrew-managed DOM updates.
+  // Nothing to change in state here.
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
@@ -98,33 +96,26 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Brewing Screen */}
-        <div id="brewing-screen" className="text-center space-y-8 p-8" style={{ display: 'none' }}>
-          <div className="space-y-4 mb-8">
-            <h1 className="text-hero text-coffee-dark">Brewing</h1>
-            {/* The actual step count will be set by script.js */}
-            <div id="step-counter" className="text-xl text-coffee-medium">Step 1 of 12</div>
+        {/* Brewing Screen - SIMPLIFIED */}
+        <div id="brewing-screen" className="text-center flex flex-col space-y-8 py-12 max-w-md mx-auto fade-in brewing-redesign-v2" style={{ display: 'none' }}>
+          {/* Step instruction will be set by script.js */}
+          <div className="mb-2">
+            <h2 id="step-instruction" className="brew-instruction">
+              {/* "☕ Pour to Bloom" */}
+              Step
+            </h2>
           </div>
-          
-          <div className="coffee-gradient p-6 rounded-xl shadow-lg max-w-md mx-auto card">
-            {/* Headers will be dynamically set by script.js for each step */}
-            <h2 id="step-instruction" className="text-cream text-xl font-semibold mb-2">☕ Pour to Bloom</h2>
-            <p id="step-description" className="text-cream text-lg mb-4">Pour 50ml of water (20%)</p>
-            <div className="text-cream text-sm">
-              Total water: <span id="water-amount" className="font-semibold">50ml</span>
-            </div>
+          {/* Blue progress bar */}
+          <div className="blue-progress-bar mb-6">
+            <div className="blue-progress-fill" style={{ width: '0%' }} id="brewing-progress-bar"></div>
           </div>
-          
-          <div className="mt-8">
-            <div className="progress-bar max-w-sm mx-auto mb-4">
-              <div className="progress-fill" style={{ width: '0%' }}></div>
-            </div>
-            {/* Timer will be set by script.js */}
-            <div id="brewing-timer-display" className="timer-display">00:10</div>
+          {/* Timer */}
+          <div className="brew-timer-ui flex-1 flex flex-col items-center justify-center">
+            <span id="brewing-timer-display" className="brew-timer">00:10</span>
           </div>
-          
-          <button 
-            className="btn btn-secondary reset-btn" 
+          {/* Reset button */}
+          <button
+            className="brew-reset-btn"
             onClick={handleReset}
           >
             Reset
