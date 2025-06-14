@@ -103,8 +103,7 @@ const Index = () => {
               id="step-instruction"
               className="font-bold text-2xl text-black text-center tracking-tight"
             >
-              {/* JS will set this text */}
-              ☕ Pour to Bloom
+              Pour 50ml hot water in circular motion
             </h2>
             {/* Step description (smaller) */}
             <p
