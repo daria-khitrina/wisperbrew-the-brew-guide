@@ -111,9 +111,9 @@ const Index = () => {
             <h2 id="step-instruction" className="font-bold text-2xl text-black text-center tracking-tight min-h-[4.5rem]">
               Pour 50ml of water to bloom
             </h2>
-            <div id="brewing-timer-display" className="brew-timer text-black font-bold tracking-tight text-[3rem] leading-none" style={{
+            <div id="brewing-timer-display" style={{
             letterSpacing: '0.01em'
-          }}>
+          }} className="brew-timer text-black font-bold tracking-tight text-[3rem] leading-none tabular-nums leading-none ">
               00:10
             </div>
           </div>
