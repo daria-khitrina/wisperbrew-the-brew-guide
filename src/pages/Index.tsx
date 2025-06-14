@@ -126,9 +126,6 @@ const Index = () => {
                 ></div>
               </div>
             </div>
-            <div id="step-counter" className="text-sm text-gray-500 mt-1 tracking-wide">
-              Step 1 of 12
-            </div>
           </div>
 
           {/* Timer */}
