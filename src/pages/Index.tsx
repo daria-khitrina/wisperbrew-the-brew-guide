@@ -126,7 +126,7 @@ const Index = () => {
         <div className="flex flex-col items-center justify-center w-full max-w-lg mx-auto pt-6 pb-10 py-0">
           <h1 style={{
             letterSpacing: '-0.02em'
-          }} className="font-bold md:text-5xl text-coffee-dark text-center text-6xl">
+          }} className="font-bold md:text-5xl text-coffee-dark text-center text-5xl">
             Brew is complete
           </h1>
           <p className="text-coffee-medium text-lg md:text-xl mt-6 mb-12">
