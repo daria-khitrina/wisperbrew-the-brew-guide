@@ -20,8 +20,8 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'inter': ['Inter', 'system-ui', 'sans-serif'],
-				'sans': ['Inter', 'system-ui', 'sans-serif'],
+				'ptroot': ['PT Root UI', 'system-ui', 'sans-serif'],
+				'sans': ['PT Root UI', 'system-ui', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
