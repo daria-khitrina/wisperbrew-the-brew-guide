@@ -81,14 +81,14 @@ const Index = () => {
         <div id="brewing-screen" className="text-center space-y-8 p-8" style={{ display: 'none' }}>
           <div className="space-y-4 mb-8">
             <h1 className="text-hero text-coffee-dark">Brewing</h1>
-            <div id="step-counter" className="text-xl text-coffee-medium">Step 1 of 5</div>
+            <div id="step-counter" className="text-xl text-coffee-medium">Step 1 of 12</div>
           </div>
           
           <div className="coffee-gradient p-6 rounded-xl shadow-lg max-w-md mx-auto card">
-            <h2 id="step-instruction" className="text-cream text-xl font-semibold mb-2">☕ Bloom</h2>
-            <p id="step-description" className="text-cream text-lg mb-4">Pour 30ml hot water in circular motion</p>
+            <h2 id="step-instruction" className="text-cream text-xl font-semibold mb-2">☕ Pour to Bloom</h2>
+            <p id="step-description" className="text-cream text-lg mb-4">Pour 50ml of water (20%)</p>
             <div className="text-cream text-sm">
-              Total water: <span id="water-amount" className="font-semibold">30ml</span>
+              Total water: <span id="water-amount" className="font-semibold">50ml</span>
             </div>
           </div>
           
@@ -96,7 +96,7 @@ const Index = () => {
             <div className="progress-bar max-w-sm mx-auto mb-4">
               <div className="progress-fill" style={{ width: '0%' }}></div>
             </div>
-            <div id="brewing-timer-display" className="timer-display">--:--</div>
+            <div id="brewing-timer-display" className="timer-display">00:10</div>
           </div>
           
           <button 
