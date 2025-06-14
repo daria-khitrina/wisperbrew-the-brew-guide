@@ -104,7 +104,7 @@ function updateTimer() {
     // Update timer display with drift-corrected time - target brewing screen specifically
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;
-    const timerDisplay = document.querySelector('#brewing-screen .timer-display');
+    const timerDisplay = document.getElementById('brewing-timer-display');
     if (timerDisplay) {
       timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
       console.log(`Timer updated: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
@@ -188,7 +188,7 @@ function brewingComplete() {
   updateProgress(100);
   
   // Update complete screen timer display
-  const completeTimerDisplay = document.querySelector('#complete-screen .timer-display');
+  const completeTimerDisplay = document.getElementById('complete-timer-display');
   if (completeTimerDisplay) {
     completeTimerDisplay.textContent = 'Done';
   }
@@ -197,9 +197,9 @@ function brewingComplete() {
   showScreen('complete');
   
   // Reset state after longer delay for completion appreciation
-  setTimeout(() => {
-    resetBrewing();
-  }, 10000); // Auto-return to home after 10 seconds
+  // setTimeout(() => {
+  //   resetBrewing();
+  // }, 10000); // Auto-return to home after 10 seconds
 }
 
 function resetBrewing() {
@@ -220,6 +220,16 @@ function resetBrewing() {
   
   // Reset progress bar
   updateProgress(0);
+
+  // Reset timer displays
+  const homeTimer = document.getElementById('home-timer-display');
+  if (homeTimer) homeTimer.textContent = '00:00';
+  
+  const brewingTimer = document.getElementById('brewing-timer-display');
+  if (brewingTimer) brewingTimer.textContent = '--:--';
+  
+  const completeTimer = document.getElementById('complete-timer-display');
+  if (completeTimer) completeTimer.textContent = 'Done';
   
   showScreen('home');
 }
@@ -283,6 +293,14 @@ function displayStep(stepData) {
     stepCounter.textContent = `Step ${stepData.step} of ${currentRecipe.length}`;
   } else {
     console.log('Step counter element not found');
+  }
+
+  // Set initial timer display for the current step
+  const timerDisplay = document.getElementById('brewing-timer-display');
+  if (timerDisplay) {
+    const minutes = Math.floor(stepData.duration / 60);
+    const seconds = stepData.duration % 60;
+    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }
 }
 

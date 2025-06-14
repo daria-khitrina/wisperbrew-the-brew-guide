@@ -86,7 +86,7 @@ const Index = () => {
             <div className="progress-bar max-w-sm mx-auto mb-4">
               <div className="progress-fill" style={{ width: '0%' }}></div>
             </div>
-            <div className="timer-display">00:00</div>
+            <div id="home-timer-display" className="timer-display">00:00</div>
           </div>
         </div>
 
@@ -109,7 +109,7 @@ const Index = () => {
             <div className="progress-bar max-w-sm mx-auto mb-4">
               <div className="progress-fill" style={{ width: '0%' }}></div>
             </div>
-            <div className="timer-display">00:30</div>
+            <div id="brewing-timer-display" className="timer-display">--:--</div>
           </div>
           
           <button 
@@ -138,7 +138,7 @@ const Index = () => {
             <div className="progress-bar max-w-sm mx-auto mb-4">
               <div className="progress-fill" style={{ width: '100%' }}></div>
             </div>
-            <div className="timer-display">Done</div>
+            <div id="complete-timer-display" className="timer-display">Done</div>
           </div>
           
           <button 
