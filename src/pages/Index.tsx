@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from 'react';
 import { runConfetti } from '../lib/confetti';
 
@@ -25,76 +24,72 @@ declare global {
 const WHISPER_BREW_MAX_WAIT_MS = 5000; // 5 seconds for max wait
 
 const Index = () => {
-  // --- New state for loading and error
   const [isBrewingReady, setIsBrewingReady] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
   const [loadingAttempt, setLoadingAttempt] = useState(1);
-  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const scriptRef = useRef<HTMLScriptElement | null>(null);
 
-  // --- Script loader and WhisperBrew poller
-  const loadWhisperBrewScript = () => {
+  useEffect(() => {
     setIsBrewingReady(false);
     setLoadingError(false);
-    // Remove old scripts
-    const oldScript = document.getElementById('brew-script');
-    if (oldScript && oldScript.parentNode) {
-      oldScript.parentNode.removeChild(oldScript);
+
+    // CLEANUP any previous script and WhisperBrew by removing previous script element
+    if (scriptRef.current && scriptRef.current.parentNode) {
+      scriptRef.current.parentNode.removeChild(scriptRef.current);
+      scriptRef.current = null;
     }
-    // Remove any old WhisperBrew references
     if ('WhisperBrew' in window) {
       window.WhisperBrew = undefined;
     }
-    // Load new script
+
+    // Add new script element
     const timestamp = Date.now();
     const script = document.createElement('script');
     script.id = 'brew-script';
-    script.src = `/src/script.js?t=${timestamp}`;
+    script.src = `/script.js?t=${timestamp}`; // Now served from /public
     script.async = false;
+    scriptRef.current = script;
+
+    // Handlers
     script.onload = () => {
-      // We wait for polling to confirm it works
-      // console.log('script.js onload called');
+      // Wait just a tick for window.WhisperBrew
+      setTimeout(() => {
+        if (
+          window.WhisperBrew &&
+          typeof window.WhisperBrew.startBrewing === 'function' &&
+          typeof window.WhisperBrew.resetBrewing === 'function'
+        ) {
+          setIsBrewingReady(true);
+          setLoadingError(false);
+        } else {
+          setIsBrewingReady(false);
+          setLoadingError(true);
+        }
+      }, 80);
     };
     script.onerror = () => {
-      setLoadingError(true);
       setIsBrewingReady(false);
+      setLoadingError(true);
     };
+
     document.head.appendChild(script);
 
-    // Set up polling for WhisperBrew object/function
-    let waited = 0;
-    const pollEach = 100;
-    if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
-    pollIntervalRef.current = setInterval(() => {
-      waited += pollEach;
-      if (
-        window.WhisperBrew &&
-        typeof window.WhisperBrew.startBrewing === 'function' &&
-        typeof window.WhisperBrew.resetBrewing === 'function'
-      ) {
-        setIsBrewingReady(true);
-        setLoadingError(false);
-        if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
-        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    // Optional hard timeout in case script never loads
+    const timeout = setTimeout(() => {
+      if (!window.WhisperBrew) {
+        setIsBrewingReady(false);
+        setLoadingError(true);
       }
-    }, pollEach);
-
-    // Set up overall timeout
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => {
-      setLoadingError(true);
-      setIsBrewingReady(false);
-      if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
     }, WHISPER_BREW_MAX_WAIT_MS);
-  };
 
-  useEffect(() => {
-    loadWhisperBrewScript();
     return () => {
-      if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      clearTimeout(timeout);
+      if (scriptRef.current && scriptRef.current.parentNode) {
+        scriptRef.current.parentNode.removeChild(scriptRef.current);
+        scriptRef.current = null;
+      }
     };
-  }, [loadingAttempt]); // each attempt re-runs the loader
+  }, [loadingAttempt]);
 
   useEffect(() => {
     const completeScreen = document.getElementById('complete-screen');
@@ -117,7 +112,6 @@ const Index = () => {
     };
   }, []);
 
-  // --- Updated handlers use the new ready state
   const handleCupSelection = (cupSize: string) => {
     if (!isBrewingReady || loadingError) return;
     if (window.WhisperBrew && window.WhisperBrew.startBrewing) {
@@ -132,17 +126,14 @@ const Index = () => {
     }
   };
 
-  // --- Retry handler
   const handleRetry = () => {
     setLoadingAttempt(attempt => attempt + 1);
   };
 
-  // --- UI
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="container">
 
-        {/* Loading or Error Overlay */}
         {(!isBrewingReady || loadingError) && (
           <div className="fixed z-50 top-0 left-0 w-full h-full bg-white/80 flex flex-col justify-center items-center gap-6">
             {loadingError ? (
@@ -152,7 +143,7 @@ const Index = () => {
                   className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded font-semibold transition-all"
                   type="button"
                   onClick={handleRetry}
-                  disabled={isBrewingReady === false && !loadingError ? true : false}
+                  disabled={isBrewingReady === false && !loadingError}
                 >
                   Try again
                 </button>
@@ -163,7 +154,6 @@ const Index = () => {
           </div>
         )}
 
-        {/* Home Screen */}
         <div id="home-screen" className="text-center space-y-12 p-8 fade-in max-w-md mx-auto py-0 px-0">
           <div className="flex flex-col w-full">
             <h1 className="text-5xl md:text-6xl font-bold text-coffee-dark text-center">Wisperbrew</h1>
@@ -193,11 +183,9 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Brewing Screen */}
         <div id="brewing-screen" style={{
           display: 'none'
         }} className="flex flex-col max-w-md mx-auto py-6 px-0 md:bg-white md:rounded-3xl md:shadow-md md:px-6">
-          {/* Progress bar at the top */}
           <div className="w-full">
             <div className="brew-progress-bar bg-[#e5eaf2] rounded-full h-3 w-full relative overflow-hidden shadow-xs">
               <div className="brew-progress-fill absolute left-0 top-0 h-3 bg-[#3B82F6] transition-all duration-300" style={{
@@ -205,8 +193,6 @@ const Index = () => {
               }}></div>
             </div>
           </div>
-
-          {/* Grouped instruction (h2) and timer, 40px gap */}
           <div className="flex flex-col items-center justify-center gap-3 py-[200px]">
             <h2 id="step-instruction" className="font-bold text-2xl text-black text-center tracking-tight">
               Pour 50ml of water to bloom
@@ -217,8 +203,6 @@ const Index = () => {
               00:10
             </div>
           </div>
-
-          {/* Button at the bottom */}
           <button
             onClick={handleReset}
             className="brew-reset-btn w-full py-3 px-8 bg-background border border-gray-200 rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all duration-300 disabled:opacity-50"
@@ -228,7 +212,6 @@ const Index = () => {
           </button>
         </div>
 
-        {/* Complete Screen */}
         <div id="complete-screen" style={{
           display: 'none'
         }} className="flex flex-col items-center justify-center fade-in min-h-[50vh] p-8 px-0">
@@ -256,4 +239,3 @@ const Index = () => {
 };
 
 export default Index;
-
