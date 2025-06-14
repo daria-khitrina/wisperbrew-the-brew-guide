@@ -63,8 +63,7 @@ const Index = () => {
       window.WhisperBrew.showScreen('complete');
     }
   };
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
+  return <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="container">
         {/* Home Screen */}
         <div id="home-screen" className="text-center space-y-12 p-8 fade-in max-w-md mx-auto py-0 px-0">
@@ -95,54 +94,44 @@ const Index = () => {
         </div>
 
         {/* Brewing Screen */}
-        <div
-          id="brewing-screen"
-          style={{ display: 'none' }}
-          className="flex flex-col justify-between min-h-[420px] max-w-md mx-auto py-8 px-6 md:bg-white md:rounded-3xl md:shadow-md h-full"
-        >
+        <div id="brewing-screen" style={{
+        display: 'none'
+      }} className="flex flex-col flex min-h-[420px] max-w-md mx-auto py-8 px-6 md:bg-white md:rounded-3xl md:shadow-md h-full">
           {/* Progress bar at the top */}
           <div className="w-full">
             <div className="brew-progress-bar bg-[#e5eaf2] rounded-full h-3 w-full relative overflow-hidden shadow-xs">
-              <div
-                className="brew-progress-fill absolute left-0 top-0 h-3 bg-[#3B82F6] transition-all duration-300"
-                style={{ width: '0%' }}
-              ></div>
+              <div className="brew-progress-fill absolute left-0 top-0 h-3 bg-[#3B82F6] transition-all duration-300" style={{
+              width: '0%'
+            }}></div>
             </div>
           </div>
 
           {/* Grouped instruction (h2) and timer, 40px gap */}
           <div className="flex flex-col items-center justify-center gap-10 py-8">
-            <h2
-              id="step-instruction"
-              className="font-bold text-2xl text-black text-center tracking-tight min-h-[4.5rem]"
-            >
+            <h2 id="step-instruction" className="font-bold text-2xl text-black text-center tracking-tight min-h-[4.5rem]">
               Pour 50ml of water to bloom
             </h2>
-            <div id="brewing-timer-display"
-              className="brew-timer text-black font-bold tracking-tight text-[3rem] leading-none"
-              style={{ letterSpacing: '0.01em' }}
-            >
+            <div id="brewing-timer-display" className="brew-timer text-black font-bold tracking-tight text-[3rem] leading-none" style={{
+            letterSpacing: '0.01em'
+          }}>
               00:10
             </div>
           </div>
 
           {/* Button at the bottom */}
-          <button
-            className="brew-reset-btn w-full max-w-[280px] py-3 px-8 bg-white border border-gray-200 text-black font-semibold rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all text-lg"
-            onClick={handleReset}
-          >
+          <button className="brew-reset-btn w-full max-w-[280px] py-3 px-8 bg-white border border-gray-200 text-black font-semibold rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all text-lg" onClick={handleReset}>
             Reset
           </button>
         </div>
 
         {/* Complete Screen */}
         <div id="complete-screen" style={{
-          display: 'none'
-        }} className="flex flex-col items-center justify-center fade-in min-h-[50vh] p-8 px-0">
+        display: 'none'
+      }} className="flex flex-col items-center justify-center fade-in min-h-[50vh] p-8 px-0">
           <div className="flex flex-col items-center justify-center w-full max-w-lg mx-auto pt-6 pb-10 py-0">
             <h1 style={{
-              letterSpacing: '-0.02em'
-            }} className="font-bold md:text-5xl text-coffee-dark text-center text-5xl">
+            letterSpacing: '-0.02em'
+          }} className="font-bold md:text-5xl text-coffee-dark text-center text-5xl">
               Brew is complete
             </h1>
             <p className="text-coffee-medium text-lg md:text-xl mt-6 mb-12">
@@ -152,7 +141,6 @@ const Index = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
 export default Index;
