@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import BrewCarousel from "../components/BrewCarousel";
+
+import { useEffect } from 'react';
 
 declare global {
   interface Window {
@@ -19,22 +19,13 @@ declare global {
 }
 
 const Index = () => {
-  // State for brewing steps and active index
-  const [steps, setSteps] = useState<any[]>([]);
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [timer, setTimer] = useState("00:00");
-  const [stepProgress, setStepProgress] = useState(0);
-  const [brewing, setBrewing] = useState(false);
-  const brewingPollRef = useRef<NodeJS.Timeout | null>(null);
-
   useEffect(() => {
-    // Load script.js with bust param, only once
+    // Force reload script.js with a cache-busting query param
     const timestamp = Date.now();
     const script = document.createElement('script');
     script.src = `/src/script.js?t=${timestamp}`;
     script.async = false;
     script.onload = () => {
-      // Force reload script.js with a cache-busting query param
       console.log("script.js loaded with cache buster", script.src);
       // Verify Brew recipes in loaded script
       if (window.WhisperBrew) {
@@ -54,70 +45,6 @@ const Index = () => {
       if (script.parentNode) {
         script.parentNode.removeChild(script);
       }
-    };
-  }, []);
-
-  // Subscribe to recipe/step changes
-  useEffect(() => {
-    if (!(window.WhisperBrew && window.WhisperBrew.getCurrentStep)) return;
-
-    // Poll the state every 200ms to get brewing info for carousel
-    function pollBrew() {
-      const state = window.WhisperBrew!.getTimerState();
-      const currStep = window.WhisperBrew!.getCurrentStep();
-      // Programmatically extract recipe for carousel
-      let recipe: any[] = [];
-      if (currStep) {
-        // Recipe for the current brew is the array containing this step as reference
-        // We'll try to access the whole recipe by backtracing step numbers
-        // NOTE: As script.js holds a private recipe, we infer it from step counts
-        // So we'll synthesize step items for the carousel (mirroring script.js arrays)
-        // Since currentStep.step reports the real number, always 1-indexed
-        // We'll build dummy placeholder steps if not present
-        const maxSteps = 12;
-        for (let k = 1; k <= maxSteps; k++) {
-          if (currStep.step === k) {
-            recipe.push(currStep);
-          } else {
-            // Placeholder -- actual step content for carousel visual
-            recipe.push({
-              step: k,
-              instruction: k === currStep.step ? currStep.instruction : `Step ${k}`,
-              description: k === currStep.step ? currStep.description : "",
-              duration: k === currStep.step ? currStep.duration : 0,
-              totalWater: k === currStep.step ? currStep.totalWater : "",
-            });
-          }
-        }
-        setSteps(recipe);
-        setCurrentStepIndex(currStep.step ? currStep.step - 1 : 0);
-      } else {
-        setSteps([]);
-        setCurrentStepIndex(0);
-      }
-      // Timer and progress
-      if (typeof state.remainingTime === "number" && currStep?.duration) {
-        const remaining = Math.max(0, state.remainingTime);
-        const timerString = `${String(Math.floor(remaining / 60)).padStart(2, '0')}:${String(Math.floor(remaining % 60)).padStart(2, '0')}`;
-        setTimer(timerString);
-        const progress = 100 - (remaining / currStep.duration) * 100;
-        setStepProgress(progress);
-      } else {
-        setTimer("--:--");
-        setStepProgress(0);
-      }
-      // Update brewing status
-      setBrewing(state.isTimerRunning);
-    }
-
-    if (brewingPollRef.current) clearInterval(brewingPollRef.current);
-    brewingPollRef.current = setInterval(pollBrew, 200);
-
-    // Initial call to seed UI
-    pollBrew();
-
-    return () => {
-      if (brewingPollRef.current) clearInterval(brewingPollRef.current);
     };
   }, []);
 
@@ -172,16 +99,36 @@ const Index = () => {
         </div>
 
         {/* Brewing Screen */}
-        <div id="brewing-screen" className="text-center space-y-8 p-0" style={{ display: 'none' }}>
-          <div className="pt-6 pb-4 px-1 max-w-2xl mx-auto">
-            <BrewCarousel
-              steps={steps}
-              currentStepIndex={currentStepIndex}
-              timerString={timer}
-              onReset={handleReset}
-              stepProgress={stepProgress}
-            />
+        <div id="brewing-screen" className="text-center space-y-8 p-8" style={{ display: 'none' }}>
+          <div className="space-y-4 mb-8">
+            <h1 className="text-hero text-coffee-dark">Brewing</h1>
+            {/* The actual step count will be set by script.js */}
+            <div id="step-counter" className="text-xl text-coffee-medium">Step 1 of 12</div>
           </div>
+          
+          <div className="coffee-gradient p-6 rounded-xl shadow-lg max-w-md mx-auto card">
+            {/* Headers will be dynamically set by script.js for each step */}
+            <h2 id="step-instruction" className="text-cream text-xl font-semibold mb-2">☕ Pour to Bloom</h2>
+            <p id="step-description" className="text-cream text-lg mb-4">Pour 50ml of water (20%)</p>
+            <div className="text-cream text-sm">
+              Total water: <span id="water-amount" className="font-semibold">50ml</span>
+            </div>
+          </div>
+          
+          <div className="mt-8">
+            <div className="progress-bar max-w-sm mx-auto mb-4">
+              <div className="progress-fill" style={{ width: '0%' }}></div>
+            </div>
+            {/* Timer will be set by script.js */}
+            <div id="brewing-timer-display" className="timer-display">00:10</div>
+          </div>
+          
+          <button 
+            className="btn btn-secondary reset-btn" 
+            onClick={handleReset}
+          >
+            Reset
+          </button>
         </div>
 
         {/* Complete Screen */}
