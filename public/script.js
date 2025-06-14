@@ -45,42 +45,59 @@ if (!window.WhisperBrew) {
   // Audio context for tick sounds
   let audioContext = null;
 
-  // Initialize audio context
+  // Initialize audio context - needs to be called from a user gesture for iOS
   function initAudio() {
+    if (audioContext && audioContext.state === 'running') {
+      console.log('Audio context is already running.');
+      return;
+    }
+    
     if (!audioContext) {
       try {
+        console.log('Creating new AudioContext...');
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
       } catch (error) {
-        console.log('Audio context not supported:', error);
+        console.error('Audio context not supported:', error);
+        return; // Exit if context cannot be created
       }
+    }
+    
+    // Resume audio context if it's suspended (required for user gesture activation)
+    if (audioContext.state === 'suspended') {
+      console.log('Resuming suspended AudioContext...');
+      audioContext.resume().then(() => {
+        console.log('AudioContext resumed successfully.');
+      }).catch(error => {
+        console.error('Failed to resume AudioContext:', error);
+      });
     }
   }
 
   // Play soft audio tick
   function playTick(isComplete = false) {
+    // Only play tick if context is successfully initialized and running
+    if (!audioContext || audioContext.state !== 'running') {
+      console.log('Audio tick skipped: AudioContext not ready or not running.');
+      return;
+    }
+    
     try {
-      if (!audioContext) {
-        initAudio();
-      }
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
       
-      if (audioContext) {
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        
-        // Different frequencies for step vs completion
-        oscillator.frequency.setValueAtTime(isComplete ? 300 : 200, audioContext.currentTime);
-        oscillator.type = 'sine';
-        
-        // Soft volume and quick fade
-        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + (isComplete ? 0.08 : 0.05));
-        
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + (isComplete ? 0.08 : 0.05));
-      }
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      // Different frequencies for step vs completion
+      oscillator.frequency.setValueAtTime(isComplete ? 300 : 200, audioContext.currentTime);
+      oscillator.type = 'sine';
+      
+      // Soft volume and quick fade
+      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + (isComplete ? 0.08 : 0.05));
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + (isComplete ? 0.08 : 0.05));
     } catch (error) {
       console.log('Audio tick failed:', error);
     }
@@ -124,6 +141,9 @@ if (!window.WhisperBrew) {
   // Enhanced brewing logic with drift correction
   function startBrewing(cupSize) {
     console.log(`Starting brewing for ${cupSize} cup(s)`);
+    
+    // **KEY FIX**: Initialize audio on user gesture
+    initAudio();
     
     // Set the recipe based on cup size
     currentRecipe = cupSize === '1-cup' ? window.BREWING_RECIPES.oneCup : window.BREWING_RECIPES.twoCup;
