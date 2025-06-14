@@ -119,7 +119,7 @@ const Index = () => {
           </div>
 
           {/* Button at the bottom */}
-          <button className="brew-reset-btn w-full max-w-[280px] py-3 px-8 bg-white border border-gray-200 text-black font-semibold rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all text-lg" onClick={handleReset}>
+          <button onClick={handleReset} className="brew-reset-btn max-w-full py-3 px-8 bg-white border border-gray-200 text-black font-semibold rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all text-lg">
             Reset
           </button>
         </div>
