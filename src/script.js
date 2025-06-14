@@ -101,15 +101,18 @@ function updateTimer() {
   if (currentStep) {
     remainingTime = Math.max(0, currentStep.duration - actualElapsed);
     
-    // Update timer display with drift-corrected time
+    // Update timer display with drift-corrected time - target brewing screen specifically
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;
-    const timerDisplay = document.querySelector('.timer-display');
+    const timerDisplay = document.querySelector('#brewing-screen .timer-display');
     if (timerDisplay) {
       timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      console.log(`Timer updated: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+    } else {
+      console.log('Timer display element not found in brewing screen');
     }
     
-    // Calculate and update progress
+    // Calculate and update progress - target brewing screen specifically
     const stepProgress = ((currentStep.duration - remainingTime) / currentStep.duration) * 100;
     const completedSteps = currentStepIndex;
     const overallProgress = ((completedSteps / currentRecipe.length) + (stepProgress / 100 / currentRecipe.length)) * 100;
@@ -184,6 +187,12 @@ function brewingComplete() {
   // Update final progress
   updateProgress(100);
   
+  // Update complete screen timer display
+  const completeTimerDisplay = document.querySelector('#complete-screen .timer-display');
+  if (completeTimerDisplay) {
+    completeTimerDisplay.textContent = 'Done';
+  }
+  
   // Show completion screen
   showScreen('complete');
   
@@ -217,42 +226,63 @@ function resetBrewing() {
 
 // Enhanced UI update functions
 function updateProgress(percentage) {
-  const progressFill = document.querySelector('.progress-fill');
+  // Target progress bar in the currently active screen
+  let progressFill = null;
+  
+  if (currentScreen === 'brewing') {
+    progressFill = document.querySelector('#brewing-screen .progress-fill');
+  } else if (currentScreen === 'complete') {
+    progressFill = document.querySelector('#complete-screen .progress-fill');
+  } else {
+    progressFill = document.querySelector('#home-screen .progress-fill');
+  }
+  
   if (progressFill) {
     const clampedPercentage = Math.max(0, Math.min(100, percentage));
     progressFill.style.width = `${clampedPercentage}%`;
+    console.log(`Progress updated: ${clampedPercentage.toFixed(1)}%`);
+  } else {
+    console.log(`Progress bar not found in ${currentScreen} screen`);
   }
 }
 
 function displayStep(stepData) {
-  console.log(`Displaying: ${stepData.instruction} - ${stepData.description}`);
+  console.log(`Displaying step: ${stepData.instruction} - ${stepData.description}`);
   
-  // Update step instruction
-  const stepInstruction = document.getElementById('step-instruction');
+  // Update step instruction - target brewing screen specifically
+  const stepInstruction = document.querySelector('#brewing-screen #step-instruction');
   if (stepInstruction) {
     stepInstruction.textContent = stepData.instruction;
+  } else {
+    console.log('Step instruction element not found');
   }
   
-  // Update step description with action and volume info
-  const stepDescription = document.getElementById('step-description');
+  // Update step description with action and volume info - target brewing screen specifically
+  const stepDescription = document.querySelector('#brewing-screen #step-description');
   if (stepDescription) {
     let description = stepData.description;
     if (stepData.volume) {
       description += ` (${stepData.volume})`;
     }
     stepDescription.textContent = description;
+  } else {
+    console.log('Step description element not found');
   }
   
-  // Update water amount display
-  const waterAmount = document.getElementById('water-amount');
+  // Update water amount display - target brewing screen specifically
+  const waterAmount = document.querySelector('#brewing-screen #water-amount');
   if (waterAmount) {
     waterAmount.textContent = `${stepData.totalWater}ml`;
+  } else {
+    console.log('Water amount element not found');
   }
   
-  // Update step counter
-  const stepCounter = document.getElementById('step-counter');
+  // Update step counter - target brewing screen specifically
+  const stepCounter = document.querySelector('#brewing-screen #step-counter');
   if (stepCounter) {
     stepCounter.textContent = `Step ${stepData.step} of ${currentRecipe.length}`;
+  } else {
+    console.log('Step counter element not found');
   }
 }
 
