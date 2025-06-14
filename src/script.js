@@ -11,7 +11,7 @@ const BREWING_RECIPES = {
     { step: 8, instruction: "Fourth Pour", description: "Pour water to 200ml (80%)", duration: 10, totalWater: 200 },
     { step: 9, instruction: "Pause", description: "Wait for the drip", duration: 10, totalWater: 200 },
     { step: 10, instruction: "Final Pour", description: "Pour remaining water to 250ml (100%)", duration: 10, totalWater: 250 },
-    { step: 11, instruction: "2:00 - 2:05 Gently swirl", description: "Gently swirl for an even bed", duration: 5, totalWater: 250 },
+    { step: 11, instruction: "Gently swirl", description: "Gently swirl for an even bed", duration: 5, totalWater: 250 },
   ],
   twoCup: [
     { step: 1, instruction: "☕ Pour to Bloom", description: "Pour 100ml of water (20%)", duration: 10, totalWater: 100 },
@@ -24,7 +24,7 @@ const BREWING_RECIPES = {
     { step: 8, instruction: "Fourth Pour", description: "Pour water to 400ml (80%)", duration: 10, totalWater: 400 },
     { step: 9, instruction: "Pause", description: "Wait for the drip", duration: 10, totalWater: 400 },
     { step: 10, instruction: "Final Pour", description: "Pour remaining water to 500ml (100%)", duration: 10, totalWater: 500 },
-    { step: 11, instruction: "2:00 - 2:05 Gently swirl", description: "Gently swirl for an even bed", duration: 5, totalWater: 500 },
+    { step: 11, instruction: "Gently swirl", description: "Gently swirl for an even bed", duration: 5, totalWater: 500 },
   ]
 };
 
