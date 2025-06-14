@@ -239,11 +239,12 @@ function updateProgress(percentage) {
   let progressFill = null;
   
   if (currentScreen === 'brewing') {
-    progressFill = document.querySelector('#brewing-screen .progress-fill');
+    // Fix: use the correct class '.brew-progress-fill'
+    progressFill = document.querySelector('#brewing-screen .brew-progress-fill');
   } else if (currentScreen === 'complete') {
-    progressFill = document.querySelector('#complete-screen .progress-fill');
+    progressFill = document.querySelector('#complete-screen .brew-progress-fill');
   } else {
-    progressFill = document.querySelector('#home-screen .progress-fill');
+    progressFill = document.querySelector('#home-screen .brew-progress-fill');
   }
   
   if (progressFill) {
