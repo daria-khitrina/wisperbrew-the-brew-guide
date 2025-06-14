@@ -51,27 +51,27 @@ const Index = () => {
         {/* Home Screen */}
         <div id="home-screen" className="text-center space-y-12 p-8 fade-in max-w-md mx-auto">
           <div className="space-y-6">
-            <h1 className="text-6xl font-bold text-coffee-dark">Wisperbrew</h1>
-            <p className="text-xl text-coffee-medium">Perfect pour-over coffee timing</p>
+            <h1 className="text-5xl md:text-6xl font-bold text-coffee-dark">Wisperbrew</h1>
+            <p className="text-lg md:text-xl text-coffee-medium">Perfect pour-over coffee timing</p>
           </div>
           
           <div className="flex flex-col gap-6 w-full">
             <button 
-              className="w-full py-6 px-8 border-2 border-coffee-medium rounded-full text-coffee-medium text-xl font-medium hover:bg-coffee-medium hover:text-cream transition-all duration-300"
+              className="w-full py-6 px-8 bg-background border border-input rounded-full hover:border-coffee-medium transition-all duration-300"
               onClick={() => handleCupSelection('1-cup')}
             >
               <div className="flex flex-col items-center gap-1">
-                <span className="font-bold text-coffee-dark">1 cup</span>
-                <span className="text-sm opacity-80">15g beans + 250ml</span>
+                <span className="font-bold text-coffee-dark text-xl">1 cup</span>
+                <span className="text-sm text-coffee-medium">15g beans + 250ml</span>
               </div>
             </button>
             <button 
-              className="w-full py-6 px-8 border-2 border-coffee-medium rounded-full text-coffee-medium text-xl font-medium hover:bg-coffee-medium hover:text-cream transition-all duration-300"
+              className="w-full py-6 px-8 bg-background border border-input rounded-full hover:border-coffee-medium transition-all duration-300"
               onClick={() => handleCupSelection('2-cup')}
             >
               <div className="flex flex-col items-center gap-1">
-                <span className="font-bold text-coffee-dark">2 cups</span>
-                <span className="text-sm opacity-80">30g beans + 500ml</span>
+                <span className="font-bold text-coffee-dark text-xl">2 cups</span>
+                <span className="text-sm text-coffee-medium">30g beans + 500ml</span>
               </div>
             </button>
           </div>
