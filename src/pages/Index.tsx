@@ -4,8 +4,16 @@ import { useEffect } from 'react';
 declare global {
   interface Window {
     WhisperBrew?: {
+      showScreen: (screen: string) => void;
       startBrewing: (cupSize: string) => void;
+      updateTimer: () => void;
+      nextStep: () => void;
+      updateProgress: (percentage: number) => void;
+      displayStep: (stepData: any) => void;
       resetBrewing: () => void;
+      getCurrentStep: () => any;
+      getTimerState: () => { remainingTime: number; isTimerRunning: boolean; currentStepIndex: number };
+      getTotalProgress: () => number;
     };
   }
 }
