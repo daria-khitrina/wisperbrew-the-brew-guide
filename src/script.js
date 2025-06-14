@@ -2,7 +2,7 @@
 // Brewing recipe data
 const BREWING_RECIPES = {
   oneCup: [
-    { step: 1, instruction: ☕ Bloom", description: "Pour 30ml hot water in circular motion", duration: 30, totalWater: 30 },
+    { step: 1, instruction: "☕ Bloom", description: "Pour 30ml hot water in circular motion", duration: 30, totalWater: 30 },
     { step: 2, instruction: "First Pour", description: "Pour water to 100ml total", duration: 30, totalWater: 100 },
     { step: 3, instruction: "Second Pour", description: "Pour water to 170ml total", duration: 30, totalWater: 170 },
     { step: 4, instruction: "Final Pour", description: "Pour water to 250ml total", duration: 30, totalWater: 250 },
