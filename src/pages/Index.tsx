@@ -12,14 +12,28 @@ declare global {
 
 const Index = () => {
   useEffect(() => {
-    // Load the script synchronously
+    // Force reload script.js with a cache-busting query param
+    const timestamp = Date.now();
     const script = document.createElement('script');
-    script.src = '/src/script.js';
-    script.async = false; // Changed to synchronous loading
+    script.src = `/src/script.js?t=${timestamp}`;
+    script.async = false;
+    script.onload = () => {
+      console.log("script.js loaded with cache buster", script.src);
+      // Verify Brew recipes in loaded script
+      if (window.WhisperBrew) {
+        console.log("WhisperBrew is loaded (from Index.tsx Effect)");
+        // Optionally log recipe info for the dev
+        if (window.WhisperBrew.getCurrentStep) {
+          const stepInfo = window.WhisperBrew.getCurrentStep();
+          console.log("Initial step info:", stepInfo);
+        }
+      } else {
+        console.error("WhisperBrew not loaded after injecting script.js");
+      }
+    };
     document.head.appendChild(script);
 
     return () => {
-      // Cleanup script on unmount
       if (script.parentNode) {
         script.parentNode.removeChild(script);
       }
@@ -47,7 +61,6 @@ const Index = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="container">
-        
         {/* Home Screen */}
         <div id="home-screen" className="text-center space-y-12 p-8 fade-in max-w-md mx-auto">
           <div className="space-y-6">
@@ -81,10 +94,12 @@ const Index = () => {
         <div id="brewing-screen" className="text-center space-y-8 p-8" style={{ display: 'none' }}>
           <div className="space-y-4 mb-8">
             <h1 className="text-hero text-coffee-dark">Brewing</h1>
+            {/* The actual step count will be set by script.js */}
             <div id="step-counter" className="text-xl text-coffee-medium">Step 1 of 12</div>
           </div>
           
           <div className="coffee-gradient p-6 rounded-xl shadow-lg max-w-md mx-auto card">
+            {/* Headers will be dynamically set by script.js for each step */}
             <h2 id="step-instruction" className="text-cream text-xl font-semibold mb-2">☕ Pour to Bloom</h2>
             <p id="step-description" className="text-cream text-lg mb-4">Pour 50ml of water (20%)</p>
             <div className="text-cream text-sm">
@@ -96,6 +111,7 @@ const Index = () => {
             <div className="progress-bar max-w-sm mx-auto mb-4">
               <div className="progress-fill" style={{ width: '0%' }}></div>
             </div>
+            {/* Timer will be set by script.js */}
             <div id="brewing-timer-display" className="timer-display">00:10</div>
           </div>
           
@@ -135,7 +151,6 @@ const Index = () => {
             Brew Another Cup
           </button>
         </div>
-
       </div>
     </div>
   );
