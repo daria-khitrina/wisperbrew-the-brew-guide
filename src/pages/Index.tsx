@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { runConfetti } from '../lib/confetti';
 declare global {
@@ -42,12 +41,10 @@ const Index = () => {
       }
     };
   }, []);
-
   useEffect(() => {
     const completeScreen = document.getElementById('complete-screen');
     if (!completeScreen) return;
-
-    const observer = new MutationObserver((mutationsList) => {
+    const observer = new MutationObserver(mutationsList => {
       for (const mutation of mutationsList) {
         if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
           const target = mutation.target as HTMLElement;
@@ -57,14 +54,13 @@ const Index = () => {
         }
       }
     });
-
-    observer.observe(completeScreen, { attributes: true });
-
+    observer.observe(completeScreen, {
+      attributes: true
+    });
     return () => {
       observer.disconnect();
     };
   }, []);
-
   const handleCupSelection = (cupSize: string) => {
     console.log(`Button clicked for ${cupSize}`);
     if (window.WhisperBrew && window.WhisperBrew.startBrewing) {
@@ -121,7 +117,7 @@ const Index = () => {
         {/* Brewing Screen */}
         <div id="brewing-screen" style={{
         display: 'none'
-      }} className="flex flex-col max-w-md mx-auto py-8 px-0 md:bg-white md:rounded-3xl md:shadow-md md:px-6">
+      }} className="flex flex-col max-w-md mx-auto py-6 px-0 md:bg-white md:rounded-3xl md:shadow-md md:px-6">
           {/* Progress bar at the top */}
           <div className="w-full">
             <div className="brew-progress-bar bg-[#e5eaf2] rounded-full h-3 w-full relative overflow-hidden shadow-xs">
