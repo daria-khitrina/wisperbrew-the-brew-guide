@@ -71,7 +71,7 @@ const Index = () => {
           
           <div className="flex flex-col gap-6 w-full">
             <button 
-              className="w-full py-6 px-8 bg-background border border-input rounded-full hover:border-coffee-medium transition-all duration-300"
+              className="w-full py-6 px-8 bg-background border border-gray-200 rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all duration-300"
               onClick={() => handleCupSelection('1-cup')}
             >
               <div className="flex flex-col items-center gap-1">
@@ -80,7 +80,7 @@ const Index = () => {
               </div>
             </button>
             <button 
-              className="w-full py-6 px-8 bg-background border border-input rounded-full hover:border-coffee-medium transition-all duration-300"
+              className="w-full py-6 px-8 bg-background border border-gray-200 rounded-full shadow-xs hover:border-[#3B82F6] hover:bg-[#f6faff] transition-all duration-300"
               onClick={() => handleCupSelection('2-cup')}
             >
               <div className="flex flex-col items-center gap-1">
