@@ -98,22 +98,14 @@ const Index = () => {
           style={{ display: 'none' }}
         >
           <div className="w-full flex flex-col items-center gap-4">
-            {/* Step instruction */}
+            {/* Only Step instruction, no step description */}
             <h2
               id="step-instruction"
               className="font-bold text-2xl text-black text-center tracking-tight"
             >
               {/* JS will set this text */}
-              ☕ Pour to Bloom
+              Pour 50ml of water to bloom
             </h2>
-            {/* Step description (smaller) */}
-            <p
-              id="step-description"
-              className="text-base text-gray-700 text-center"
-            >
-              {/* JS will set this text */}
-              Pour 50ml of water (20%)
-            </p>
           </div>
 
           {/* Progress timeline (blue bar) */}

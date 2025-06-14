@@ -1,4 +1,3 @@
-
 // New 12-step brewing recipe data
 const BREWING_RECIPES = {
   oneCup: [
@@ -260,32 +259,42 @@ function updateProgress(percentage) {
 }
 
 function displayStep(stepData) {
-  console.log(
-    `[displayStep] Instruction: ${stepData.instruction} | Description: ${stepData.description} | TotalWater: ${stepData.totalWater}ml | Step ${stepData.step} of ${currentRecipe.length}`
-  );
-  
+  // Main action goes in <h2>, combining instruction + water amount (if applicable)
+  let mainAction = '';
+
+  if (
+    stepData.instruction &&
+    /pour/i.test(stepData.instruction) &&
+    stepData.totalWater &&
+    stepData.instruction.toLowerCase().includes('bloom')
+  ) {
+    // Special phrasing for bloom pour step
+    mainAction = `Pour ${stepData.totalWater}ml of water to bloom`;
+  } else if (
+    stepData.instruction &&
+    /pour/i.test(stepData.instruction) &&
+    stepData.totalWater
+  ) {
+    // General pour
+    mainAction = `Pour to ${stepData.totalWater}ml`;
+  } else if (stepData.instruction) {
+    // Other steps: just show the instruction (e.g. Pauses, Swirls, Complete)
+    mainAction = stepData.instruction;
+  }
+
   const stepInstruction = document.querySelector('#brewing-screen #step-instruction');
-  if (stepInstruction) {
-    stepInstruction.textContent = stepData.instruction;
+  if (stepInstruction && mainAction) {
+    stepInstruction.textContent = mainAction;
+  } else if (stepInstruction) {
+    // fallback
+    stepInstruction.textContent = stepData.instruction || '';
   }
-  
-  const stepDescription = document.querySelector('#brewing-screen #step-description');
-  if (stepDescription) {
-    let description = stepData.description;
-    if (stepData.volume) {
-      description += ` (${stepData.volume})`;
-    }
-    stepDescription.textContent = description;
-  }
-  
+
+  // The <p> no longer exists so don't set step-description
+
   const waterAmount = document.querySelector('#brewing-screen #water-amount');
   if (waterAmount) {
     waterAmount.textContent = `${stepData.totalWater}ml`;
-  }
-  
-  const stepCounter = document.querySelector('#brewing-screen #step-counter');
-  if (stepCounter) {
-    stepCounter.textContent = `Step ${stepData.step} of ${currentRecipe.length}`;
   }
 
   const timerDisplay = document.getElementById('brewing-timer-display');
@@ -294,6 +303,11 @@ function displayStep(stepData) {
     const seconds = stepData.duration % 60;
     timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }
+
+  // ... log statements unchanged
+  console.log(
+    `[displayStep] Main action: ${mainAction} | Step: ${stepData.step} of ${currentRecipe.length}`
+  );
 }
 
 // Log immediately at script load
