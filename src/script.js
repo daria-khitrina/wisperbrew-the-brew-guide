@@ -1,32 +1,30 @@
-// Brewing recipe data with 12 steps, based on timing and percentages
+// Enhanced brewing recipe data with 11 detailed steps
 const BREWING_RECIPES = {
   oneCup: [
-    { step: 1, instruction: "Pour to Bloom (20%)", description: "Pour 50ml of water", duration: 10, totalWater: 50, volume: "50ml" },
-    { step: 2, instruction: "Gently Swirl", description: "To saturate all grounds", duration: 5, totalWater: 50, volume: null },
-    { step: 3, instruction: "Pause", description: "Wait for the bloom to settle", duration: 30, totalWater: 50, volume: null },
-    { step: 4, instruction: "Pour to 40%", description: "Pour until you reach 100ml", duration: 15, totalWater: 100, volume: "50ml" },
-    { step: 5, instruction: "Pause", description: "Let the water drip through", duration: 10, totalWater: 100, volume: null },
-    { step: 6, instruction: "Pour to 60%", description: "Pour until you reach 150ml", duration: 10, totalWater: 150, volume: "50ml" },
-    { step: 7, instruction: "Pause", description: "Let the water drip through", duration: 10, totalWater: 150, volume: null },
-    { step: 8, instruction: "Pour to 80%", description: "Pour until you reach 200ml", duration: 10, totalWater: 200, volume: "50ml" },
-    { step: 9, instruction: "Pause", description: "Let the water drip through", duration: 10, totalWater: 200, volume: null },
-    { step: 10, instruction: "Pour to 100%", description: "Pour until you reach 250ml", duration: 10, totalWater: 250, volume: "50ml" },
-    { step: 11, instruction: "Gently Swirl", description: "For an even extraction", duration: 5, totalWater: 250, volume: null },
-    { step: 12, instruction: "Complete", description: "Remove filter and enjoy!", duration: 5, totalWater: 250, volume: null }
+    { step: 1, instruction: "☕ Pre-wet Filter", description: "Rinse paper filter with hot water", duration: 10, totalWater: 0, action: "Pre-wet filter", volume: null },
+    { step: 2, instruction: "Add Coffee", description: "Add 15g ground coffee to filter", duration: 10, totalWater: 0, action: "Add coffee grounds", volume: null },
+    { step: 3, instruction: "Bloom Pour", description: "Pour 30ml hot water in slow circular motion", duration: 30, totalWater: 30, action: "Pour to bloom", volume: "30ml" },
+    { step: 4, instruction: "Bloom Rest", description: "Let coffee bloom and degas", duration: 15, totalWater: 30, action: "Wait for bloom", volume: null },
+    { step: 5, instruction: "First Pour", description: "Pour water slowly to 100ml total", duration: 20, totalWater: 100, action: "Pour slowly", volume: "70ml" },
+    { step: 6, instruction: "First Rest", description: "Let water drip through", duration: 10, totalWater: 100, action: "Let drip", volume: null },
+    { step: 7, instruction: "Second Pour", description: "Pour water to 170ml total", duration: 20, totalWater: 170, action: "Pour in center", volume: "70ml" },
+    { step: 8, instruction: "Second Rest", description: "Allow even extraction", duration: 10, totalWater: 170, action: "Wait for drip", volume: null },
+    { step: 9, instruction: "Final Pour", description: "Pour remaining water to 250ml", duration: 20, totalWater: 250, action: "Final pour", volume: "80ml" },
+    { step: 10, instruction: "Final Drip", description: "Let all water drip through", duration: 30, totalWater: 250, action: "Complete drip", volume: null },
+    { step: 11, instruction: "Complete", description: "Remove filter and enjoy!", duration: 5, totalWater: 250, action: "Finish brewing", volume: null }
   ],
   twoCup: [
-    { step: 1, instruction: "Pour to Bloom (20%)", description: "Pour 100ml of water", duration: 10, totalWater: 100, volume: "100ml" },
-    { step: 2, instruction: "Gently Swirl", description: "To saturate all grounds", duration: 5, totalWater: 100, volume: null },
-    { step: 3, instruction: "Pause", description: "Wait for the bloom to settle", duration: 30, totalWater: 100, volume: null },
-    { step: 4, instruction: "Pour to 40%", description: "Pour until you reach 200ml", duration: 15, totalWater: 200, volume: "100ml" },
-    { step: 5, instruction: "Pause", description: "Let the water drip through", duration: 10, totalWater: 200, volume: null },
-    { step: 6, instruction: "Pour to 60%", description: "Pour until you reach 300ml", duration: 10, totalWater: 300, volume: "100ml" },
-    { step: 7, instruction: "Pause", description: "Let the water drip through", duration: 10, totalWater: 300, volume: null },
-    { step: 8, instruction: "Pour to 80%", description: "Pour until you reach 400ml", duration: 10, totalWater: 400, volume: "100ml" },
-    { step: 9, instruction: "Pause", description: "Let the water drip through", duration: 10, totalWater: 400, volume: null },
-    { step: 10, instruction: "Pour to 100%", description: "Pour until you reach 500ml", duration: 10, totalWater: 500, volume: "100ml" },
-    { step: 11, instruction: "Gently Swirl", description: "For an even extraction", duration: 5, totalWater: 500, volume: null },
-    { step: 12, instruction: "Complete", description: "Remove filter and enjoy!", duration: 5, totalWater: 500, volume: null }
+    { step: 1, instruction: "☕ Pre-wet Filter", description: "Rinse paper filter with hot water", duration: 10, totalWater: 0, action: "Pre-wet filter", volume: null },
+    { step: 2, instruction: "Add Coffee", description: "Add 30g ground coffee to filter", duration: 10, totalWater: 0, action: "Add coffee grounds", volume: null },
+    { step: 3, instruction: "Bloom Pour", description: "Pour 60ml hot water in slow circular motion", duration: 30, totalWater: 60, action: "Pour to bloom", volume: "60ml" },
+    { step: 4, instruction: "Bloom Rest", description: "Let coffee bloom and degas", duration: 15, totalWater: 60, action: "Wait for bloom", volume: null },
+    { step: 5, instruction: "First Pour", description: "Pour water slowly to 200ml total", duration: 25, totalWater: 200, action: "Pour slowly", volume: "140ml" },
+    { step: 6, instruction: "First Rest", description: "Let water drip through", duration: 15, totalWater: 200, action: "Let drip", volume: null },
+    { step: 7, instruction: "Second Pour", description: "Pour water to 340ml total", duration: 25, totalWater: 340, action: "Pour in center", volume: "140ml" },
+    { step: 8, instruction: "Second Rest", description: "Allow even extraction", duration: 15, totalWater: 340, action: "Wait for drip", volume: null },
+    { step: 9, instruction: "Final Pour", description: "Pour remaining water to 500ml", duration: 25, totalWater: 500, action: "Final pour", volume: "160ml" },
+    { step: 10, instruction: "Final Drip", description: "Let all water drip through", duration: 45, totalWater: 500, action: "Complete drip", volume: null },
+    { step: 11, instruction: "Complete", description: "Remove filter and enjoy!", duration: 5, totalWater: 500, action: "Finish brewing", volume: null }
   ]
 };
 
