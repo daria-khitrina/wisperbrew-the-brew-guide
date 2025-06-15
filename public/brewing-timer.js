@@ -1,4 +1,3 @@
-
 // public/brewing-timer.js
 
 import { showScreen, updateProgress, displayStep } from './brewing-ui.js';
@@ -12,6 +11,71 @@ let isTimerRunning = false;
 let currentScreen = 'home';
 let stepStartTime = 0;
 let expectedEndTime = 0;
+
+// --- SOFT AUDIO CUE SYSTEM (Web Audio API) ---
+let audioCtx = null;
+function ensureAudioContext() {
+  if (!audioCtx || audioCtx.state === "closed") {
+    audioCtx = null;
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch (e) {
+      console.warn("Web Audio API not available.");
+    }
+  }
+  // Resume if it was suspended (iOS, etc)
+  if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+  return audioCtx;
+}
+
+function playSoftAudioCue(type = "tick") {
+  const ctx = ensureAudioContext();
+  if (!ctx) return;
+
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+
+  // Tuning for "tick" and "chime"
+  let freq, dur, vol, decay;
+
+  if (type === "tick") {
+    freq = 900;
+    dur = 0.11;
+    vol = 0.15;
+    decay = 0.1;
+  } else if (type === "chime") {
+    freq = 1200;
+    dur = 0.27;
+    vol = 0.19;
+    decay = 0.19;
+  } else {
+    // fallback
+    freq = 900;
+    dur = 0.11;
+    vol = 0.15;
+    decay = 0.1;
+  }
+
+  o.type = "sine";
+  o.frequency.value = freq;
+  g.gain.value = vol;
+
+  o.connect(g);
+  g.connect(ctx.destination);
+
+  // Envelope fade
+  g.gain.setValueAtTime(vol, ctx.currentTime);
+  g.gain.linearRampToValueAtTime(0.0001, ctx.currentTime + dur - decay);
+
+  o.start(ctx.currentTime);
+  o.stop(ctx.currentTime + dur);
+
+  // Clean up after it finishes
+  o.onended = () => {
+    o.disconnect();
+    g.disconnect();
+  };
+}
 
 export function startBrewing(cupSize) {
   currentRecipe =
@@ -87,6 +151,8 @@ function stepComplete() {
     clearInterval(timerInterval);
     timerInterval = null;
   }
+  // Soft tick cue!
+  playSoftAudioCue("tick");
   currentStepIndex++;
   setTimeout(() => {
     nextStep();
@@ -102,6 +168,8 @@ function brewingComplete() {
   updateProgress(100);
   const completeTimerDisplay = document.getElementById("complete-timer-display");
   if (completeTimerDisplay) completeTimerDisplay.textContent = "Done";
+  // Play brighter chime
+  playSoftAudioCue("chime");
   showScreen("complete");
 }
 
