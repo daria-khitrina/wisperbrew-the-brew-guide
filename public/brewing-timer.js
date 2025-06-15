@@ -1,3 +1,4 @@
+
 // public/brewing-timer.js
 
 import { showScreen, updateProgress, displayStep } from './brewing-ui.js';
@@ -11,47 +12,6 @@ let isTimerRunning = false;
 let currentScreen = 'home';
 let stepStartTime = 0;
 let expectedEndTime = 0;
-
-// --- Audio cue system for step and brew completion ---
-let stepChime = null;
-let brewDoneChime = null;
-
-// Preload audio files for immediate use
-function preloadAudioCues() {
-  if (!stepChime) {
-    stepChime = document.createElement("audio");
-    stepChime.src = "/soft-chime.mp3";
-    stepChime.volume = 0.7;
-    stepChime.preload = "auto";
-  }
-  if (!brewDoneChime) {
-    brewDoneChime = document.createElement("audio");
-    brewDoneChime.src = "/long-chime.mp3";
-    brewDoneChime.volume = 0.7;
-    brewDoneChime.preload = "auto";
-  }
-}
-
-// Simple helper to play a chime (on user gesture allowed policies)
-function playStepChime() {
-  if (!stepChime) preloadAudioCues();
-  if (stepChime) {
-    stepChime.currentTime = 0;
-    // Try play, ignore errors if blocked by autoplay policies
-    stepChime.play().catch(() => {});
-  }
-}
-
-function playBrewDoneChime() {
-  if (!brewDoneChime) preloadAudioCues();
-  if (brewDoneChime) {
-    brewDoneChime.currentTime = 0;
-    brewDoneChime.play().catch(() => {});
-  }
-}
-
-// Call preload ASAP on load
-preloadAudioCues();
 
 export function startBrewing(cupSize) {
   currentRecipe =
@@ -127,13 +87,6 @@ function stepComplete() {
     clearInterval(timerInterval);
     timerInterval = null;
   }
-  // Play chime for every step except last
-  if (
-    currentStepIndex < currentRecipe.length - 1 &&
-    currentRecipe.length > 0
-  ) {
-    playStepChime();
-  }
   currentStepIndex++;
   setTimeout(() => {
     nextStep();
@@ -149,8 +102,6 @@ function brewingComplete() {
   updateProgress(100);
   const completeTimerDisplay = document.getElementById("complete-timer-display");
   if (completeTimerDisplay) completeTimerDisplay.textContent = "Done";
-  // Play long/finish chime
-  playBrewDoneChime();
   showScreen("complete");
 }
 
