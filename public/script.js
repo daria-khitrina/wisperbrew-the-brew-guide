@@ -41,6 +41,7 @@ if (!window.WhisperBrew) {
   let currentScreen = 'home';
   let stepStartTime = 0;
   let expectedEndTime = 0;
+  let wakeLockSentinel = null; // For Screen Wake Lock API
 
   // Audio context for tick sounds
   let audioContext = null;
@@ -138,12 +139,52 @@ if (!window.WhisperBrew) {
     }, 300);
   }
 
+  // Wake Lock API management
+  async function requestWakeLock() {
+    if ('wakeLock' in navigator) {
+      try {
+        wakeLockSentinel = await navigator.wakeLock.request('screen');
+        wakeLockSentinel.addEventListener('release', () => {
+          console.log('Wake Lock was released by the system.');
+          const statusEl = document.getElementById('wake-lock-status');
+          if (statusEl) {
+            statusEl.style.display = 'none';
+          }
+        });
+        console.log('Wake Lock is active.');
+        const statusEl = document.getElementById('wake-lock-status');
+        if (statusEl) {
+          statusEl.style.display = 'block';
+        }
+      } catch (err) {
+        console.error(`Wake Lock request failed: ${err.name}, ${err.message}`);
+      }
+    } else {
+      console.warn('Wake Lock API is not supported on this browser.');
+    }
+  }
+
+  async function releaseWakeLock() {
+    if (wakeLockSentinel !== null) {
+      await wakeLockSentinel.release();
+      wakeLockSentinel = null;
+      console.log('Wake Lock released.');
+      const statusEl = document.getElementById('wake-lock-status');
+      if (statusEl) {
+        statusEl.style.display = 'none';
+      }
+    }
+  }
+
   // Enhanced brewing logic with drift correction
   function startBrewing(cupSize) {
     console.log(`Starting brewing for ${cupSize} cup(s)`);
     
     // **KEY FIX**: Initialize audio on user gesture
     initAudio();
+
+    // Request screen wake lock
+    requestWakeLock();
     
     // Set the recipe based on cup size
     currentRecipe = cupSize === '1-cup' ? window.BREWING_RECIPES.oneCup : window.BREWING_RECIPES.twoCup;
@@ -262,6 +303,9 @@ if (!window.WhisperBrew) {
     
     // Play completion audio tick
     playTick(true);
+
+    // Release screen wake lock
+    releaseWakeLock();
     
     isTimerRunning = false;
     if (timerInterval) {
@@ -281,6 +325,9 @@ if (!window.WhisperBrew) {
 
   function resetBrewing() {
     console.log('Resetting brewing state');
+
+    // Release screen wake lock
+    releaseWakeLock();
     
     currentRecipe = [];
     currentStepIndex = 0;
@@ -382,6 +429,15 @@ if (!window.WhisperBrew) {
       `[displayStep] Main action: ${mainAction} | Step: ${stepData.step} of ${currentRecipe.length}`
     );
   }
+
+  // Add visibility change handler to re-acquire wake lock if needed
+  const handleVisibilityChange = async () => {
+    if (isTimerRunning && document.visibilityState === 'visible') {
+      console.log('Re-acquiring Wake Lock on visibility change.');
+      await requestWakeLock();
+    }
+  };
+  document.addEventListener('visibilitychange', handleVisibilityChange);
 
   // Log immediately at script load
   console.log('WhisperBrew Enhanced Timer System initializing...');

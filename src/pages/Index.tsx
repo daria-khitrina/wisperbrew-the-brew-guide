@@ -192,6 +192,9 @@ const Index = () => {
                 width: '0%'
               }}></div>
             </div>
+            <div id="wake-lock-status" style={{ display: 'none' }} className="text-xs text-gray-500 text-center pt-2 font-medium">
+              Screen kept awake
+            </div>
           </div>
           <div className="flex flex-col items-center justify-center gap-3 py-[200px]">
             <h2 id="step-instruction" className="font-bold text-2xl text-black text-center tracking-tight">
