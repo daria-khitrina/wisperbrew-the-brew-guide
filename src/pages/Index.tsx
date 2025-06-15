@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { runConfetti } from '../lib/confetti';
+import { useWakeLockNotice } from './useWakeLockNotice';
 
 declare global {
   interface Window {
@@ -18,7 +19,10 @@ declare global {
         currentStepIndex: number;
       };
       getTotalProgress: () => number;
-    };
+      requestWakeLock?: () => Promise<void>;
+      releaseWakeLock?: () => Promise<void>;
+    }
+    setWhisperBrewOnWakeLockChange?: (fn: any) => void;
   }
 }
 
@@ -27,6 +31,9 @@ const WHISPER_BREW_MAX_WAIT_MS = 4000; // 4 seconds for max wait
 const Index = () => {
   const [isBrewingReady, setIsBrewingReady] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
+
+  // Wake lock awareness
+  useWakeLockNotice();
 
   useEffect(() => {
     setIsBrewingReady(false);
