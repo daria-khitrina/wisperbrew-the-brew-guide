@@ -200,7 +200,7 @@ import {
   getCurrentStep,
   getTimerState,
   getTotalProgress
-} from "./brewing-timer.js";
+} from "./timer-core.js"; // UPDATED from brewing-timer.js to timer-core.js
 
 // Wrap brewing start/reset for wake lock control and assign to WhisperBrew
 window.WhisperBrew.startBrewing = function (cupSize) {
