@@ -1,7 +1,8 @@
 
 import { useEffect, useState } from 'react';
 import { runConfetti } from '../lib/confetti';
-import { useWakeLockNotice } from './useWakeLockNotice';
+
+// Removed: import { useWakeLockNotice } from './useWakeLockNotice';
 
 declare global {
   interface Window {
@@ -22,7 +23,7 @@ declare global {
       requestWakeLock?: () => Promise<void>;
       releaseWakeLock?: () => Promise<void>;
     }
-    setWhisperBrewOnWakeLockChange?: (fn: any) => void;
+    setWhisperBrewOnWakeLockChange?: (fn: any) => void; // now unused, can stay for type safety
   }
 }
 
@@ -32,8 +33,7 @@ const Index = () => {
   const [isBrewingReady, setIsBrewingReady] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
 
-  // Wake lock awareness
-  useWakeLockNotice();
+  // Removed: useWakeLockNotice();
 
   useEffect(() => {
     setIsBrewingReady(false);
@@ -238,3 +238,4 @@ const Index = () => {
 };
 
 export default Index;
+

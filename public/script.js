@@ -1,3 +1,4 @@
+
 // public/script.js
 
 // Top-level stand-alone loader for modules. Uses type="module".
@@ -9,25 +10,20 @@
 // --- Screen Wake Lock Support ---
 
 let wakeLock = null;
-let onWakeLockChange = typeof window !== "undefined" ? () => {} : undefined;
 
 export async function requestWakeLock() {
   if ('wakeLock' in navigator && navigator.wakeLock.request) {
     try {
       wakeLock = await navigator.wakeLock.request('screen');
       console.log("Wake lock active!");
-      if (onWakeLockChange) onWakeLockChange({ acquired: true, supported: true });
       wakeLock.addEventListener('release', () => {
         console.log('Wake lock was released');
-        if (onWakeLockChange) onWakeLockChange({ acquired: false, supported: true });
       });
     } catch (err) {
       console.error("Wake lock failed:", err);
-      if (onWakeLockChange) onWakeLockChange({ acquired: false, supported: true, error: err });
     }
   } else {
     console.warn("Wake Lock API not supported");
-    if (onWakeLockChange) onWakeLockChange({ acquired: false, supported: false });
   }
 }
 
@@ -36,14 +32,13 @@ export async function releaseWakeLock() {
     try {
       await wakeLock.release();
       wakeLock = null;
-      if (onWakeLockChange) onWakeLockChange({ acquired: false, supported: true });
     } catch (err) {
       console.error("Wake lock release failed:", err);
     }
   }
 }
 
-// allow react to subscribe to wake lock changes, and expose core functions
+// Expose core functions for React, but no more toast/wake lock state
 window.WhisperBrew = {
   showScreen,
   // Do NOT include startBrewing or resetBrewing directly here!
@@ -56,10 +51,6 @@ window.WhisperBrew = {
   getTotalProgress,
   requestWakeLock,
   releaseWakeLock,
-};
-
-window.setWhisperBrewOnWakeLockChange = fn => {
-  onWakeLockChange = fn;
 };
 
 //
@@ -93,3 +84,7 @@ console.log(
 );
 
 showScreen("home");
+
+// Removed:
+//   - All React callback notification code for wake lock state
+//   - window.setWhisperBrewOnWakeLockChange
