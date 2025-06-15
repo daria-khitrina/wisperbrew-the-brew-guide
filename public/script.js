@@ -10,12 +10,86 @@
 
 let wakeLock = null;
 
+// --- Enhanced Wake Lock/NoSleep/Vibration System ---
+
+let noSleepInstance = null;
+let noSleepActive = false;
+let vibrationInterval = null;
+
+// Helper: Dynamically load NoSleep.js from CDN
+function loadNoSleepIfNeeded() {
+  return new Promise((resolve, reject) => {
+    if (window.NoSleep) return resolve(window.NoSleep);
+    const script = document.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/npm/nosleep.js@0.12.0/dist/NoSleep.min.js";
+    script.onload = () => resolve(window.NoSleep);
+    script.onerror = () => reject("NoSleep.js failed to load");
+    document.head.appendChild(script);
+  });
+}
+
+// Enable NoSleep fallback (hidden video keepalive)
+async function startNoSleepFallback() {
+  try {
+    await loadNoSleepIfNeeded();
+    if (!noSleepInstance && window.NoSleep) {
+      noSleepInstance = new window.NoSleep();
+    }
+    if (noSleepInstance && !noSleepActive) {
+      noSleepInstance.enable();
+      noSleepActive = true;
+      console.log("NoSleep.js fallback enabled.");
+    }
+  } catch (e) {
+    console.warn("[WakeLock] NoSleep.js fallback failed:", e);
+  }
+}
+
+function stopNoSleepFallback() {
+  if (noSleepInstance && noSleepActive) {
+    try {
+      noSleepInstance.disable();
+      console.log("NoSleep.js fallback disabled.");
+    } catch {}
+    noSleepActive = false;
+  }
+}
+
+// Enable subtle vibration pulse as additional fallback
+function startVibrationFallback() {
+  if (
+    navigator.vibrate &&
+    typeof navigator.vibrate === "function" &&
+    !vibrationInterval
+  ) {
+    vibrationInterval = setInterval(() => {
+      // Pulse for 20ms every 24 seconds (does not annoy user, but registers activity)
+      navigator.vibrate(20);
+      console.log("[WakeLock] Vibrate pulse sent.");
+    }, 24000);
+    console.log("Vibration fallback enabled.");
+  }
+}
+function stopVibrationFallback() {
+  if (vibrationInterval) {
+    clearInterval(vibrationInterval);
+    vibrationInterval = null;
+    // Try to stop vibration just in case (no harm)
+    navigator.vibrate(0);
+    console.log("Vibration fallback disabled.");
+  }
+}
+
 // --- Audio fallback variables ---
 let audioFallback = null;
 let isAudioPlaying = false;
 
 function isMobile() {
   return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+}
+
+function isAndroid() {
+  return /Android/i.test(navigator.userAgent);
 }
 
 // Creates (if needed) and plays a silent audio loop to keep device awake
@@ -29,7 +103,6 @@ function startAudioFallback() {
     audioFallback.setAttribute("preload", "auto");
     document.body.appendChild(audioFallback);
   }
-  // On first play, must be triggered by user interaction (handled by brewing start button)
   audioFallback.play().then(() => {
     isAudioPlaying = true;
     console.log("Audio fallback started to keep device awake.");
@@ -70,9 +143,16 @@ export async function requestWakeLock() {
     console.warn("Wake Lock API not supported");
   }
 
-  // If mobile, and wake lock didn't work, use fallback!
+  // If mobile, and wake lock didn't work, use fallback(s)!
   if (isMobile() && !wakeLockWorked) {
+    // 1. Try NoSleep.js, which works well on Android webviews and Chrome
+    await startNoSleepFallback();
+    // 2. Try audio fallback
     startAudioFallback();
+    // 3. Try vibration fallback (Android only, supported devices)
+    if (isAndroid()) {
+      startVibrationFallback();
+    }
   }
 }
 
@@ -86,8 +166,10 @@ export async function releaseWakeLock() {
       console.error("Wake lock release failed:", err);
     }
   }
-  // Always stop the audio fallback, if running
+  // Always stop all fallbacks, if running
   stopAudioFallback();
+  stopNoSleepFallback();
+  stopVibrationFallback();
 }
 
 // Expose core functions for React, but no more toast/wake lock state
