@@ -2,7 +2,6 @@
 // public/brewing-timer.js
 
 import { showScreen, updateProgress, displayStep } from './brewing-ui.js';
-import { oneCup, twoCup } from './brewing-recipes.js';
 
 let currentRecipe = [];
 let currentStepIndex = 0;
@@ -17,8 +16,8 @@ let expectedEndTime = 0;
 export function startBrewing(cupSize) {
   currentRecipe =
     cupSize === "1-cup"
-      ? oneCup
-      : twoCup;
+      ? window.BREWING_RECIPES.oneCup
+      : window.BREWING_RECIPES.twoCup;
   currentStepIndex = 0;
   totalTime = currentRecipe.reduce((sum, step) => sum + step.duration, 0);
 
@@ -150,4 +149,3 @@ window.__BREWING_TIMER_INTERNAL__ = {
   getTimerState,
   getTotalProgress
 };
-
