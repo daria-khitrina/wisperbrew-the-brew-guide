@@ -41,68 +41,6 @@ if (!window.WhisperBrew) {
   let currentScreen = 'home';
   let stepStartTime = 0;
   let expectedEndTime = 0;
-  let wakeLockSentinel = null; // For Screen Wake Lock API
-
-  // Audio context for tick sounds
-  let audioContext = null;
-
-  // Initialize audio context - needs to be called from a user gesture for iOS
-  function initAudio() {
-    if (audioContext && audioContext.state === 'running') {
-      console.log('Audio context is already running.');
-      return;
-    }
-    
-    if (!audioContext) {
-      try {
-        console.log('Creating new AudioContext...');
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      } catch (error) {
-        console.error('Audio context not supported:', error);
-        return; // Exit if context cannot be created
-      }
-    }
-    
-    // Resume audio context if it's suspended (required for user gesture activation)
-    if (audioContext.state === 'suspended') {
-      console.log('Resuming suspended AudioContext...');
-      audioContext.resume().then(() => {
-        console.log('AudioContext resumed successfully.');
-      }).catch(error => {
-        console.error('Failed to resume AudioContext:', error);
-      });
-    }
-  }
-
-  // Play soft audio tick
-  function playTick(isComplete = false) {
-    // Only play tick if context is successfully initialized and running
-    if (!audioContext || audioContext.state !== 'running') {
-      console.log('Audio tick skipped: AudioContext not ready or not running.');
-      return;
-    }
-    
-    try {
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-      
-      // Different frequencies for step vs completion
-      oscillator.frequency.setValueAtTime(isComplete ? 300 : 200, audioContext.currentTime);
-      oscillator.type = 'sine';
-      
-      // Soft volume and quick fade
-      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + (isComplete ? 0.08 : 0.05));
-      
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + (isComplete ? 0.08 : 0.05));
-    } catch (error) {
-      console.log('Audio tick failed:', error);
-    }
-  }
 
   // Add debug: Log recipes loaded when script starts
   console.log(
@@ -139,52 +77,9 @@ if (!window.WhisperBrew) {
     }, 300);
   }
 
-  // Wake Lock API management
-  async function requestWakeLock() {
-    if ('wakeLock' in navigator) {
-      try {
-        wakeLockSentinel = await navigator.wakeLock.request('screen');
-        wakeLockSentinel.addEventListener('release', () => {
-          console.log('Wake Lock was released by the system.');
-          const statusEl = document.getElementById('wake-lock-status');
-          if (statusEl) {
-            statusEl.style.display = 'none';
-          }
-        });
-        console.log('Wake Lock is active.');
-        const statusEl = document.getElementById('wake-lock-status');
-        if (statusEl) {
-          statusEl.style.display = 'block';
-        }
-      } catch (err) {
-        console.error(`Wake Lock request failed: ${err.name}, ${err.message}`);
-      }
-    } else {
-      console.warn('Wake Lock API is not supported on this browser.');
-    }
-  }
-
-  async function releaseWakeLock() {
-    if (wakeLockSentinel !== null) {
-      await wakeLockSentinel.release();
-      wakeLockSentinel = null;
-      console.log('Wake Lock released.');
-      const statusEl = document.getElementById('wake-lock-status');
-      if (statusEl) {
-        statusEl.style.display = 'none';
-      }
-    }
-  }
-
   // Enhanced brewing logic with drift correction
   function startBrewing(cupSize) {
     console.log(`Starting brewing for ${cupSize} cup(s)`);
-    
-    // **KEY FIX**: Initialize audio on user gesture
-    initAudio();
-
-    // Request screen wake lock
-    requestWakeLock();
     
     // Set the recipe based on cup size
     currentRecipe = cupSize === '1-cup' ? window.BREWING_RECIPES.oneCup : window.BREWING_RECIPES.twoCup;
@@ -282,9 +177,6 @@ if (!window.WhisperBrew) {
   function stepComplete() {
     console.log(`Step ${currentStepIndex + 1} complete (of total ${currentRecipe.length})`);
     
-    // Play soft audio tick for step completion
-    playTick(false);
-    
     isTimerRunning = false;
     if (timerInterval) {
       clearInterval(timerInterval);
@@ -300,13 +192,6 @@ if (!window.WhisperBrew) {
 
   function brewingComplete() {
     console.log('Brewing complete! Total steps completed:', currentRecipe.length);
-    
-    // Play completion audio tick
-    playTick(true);
-
-    // Release screen wake lock
-    releaseWakeLock();
-    
     isTimerRunning = false;
     if (timerInterval) {
       clearInterval(timerInterval);
@@ -325,9 +210,6 @@ if (!window.WhisperBrew) {
 
   function resetBrewing() {
     console.log('Resetting brewing state');
-
-    // Release screen wake lock
-    releaseWakeLock();
     
     currentRecipe = [];
     currentStepIndex = 0;
@@ -429,15 +311,6 @@ if (!window.WhisperBrew) {
       `[displayStep] Main action: ${mainAction} | Step: ${stepData.step} of ${currentRecipe.length}`
     );
   }
-
-  // Add visibility change handler to re-acquire wake lock if needed
-  const handleVisibilityChange = async () => {
-    if (isTimerRunning && document.visibilityState === 'visible') {
-      console.log('Re-acquiring Wake Lock on visibility change.');
-      await requestWakeLock();
-    }
-  };
-  document.addEventListener('visibilitychange', handleVisibilityChange);
 
   // Log immediately at script load
   console.log('WhisperBrew Enhanced Timer System initializing...');
