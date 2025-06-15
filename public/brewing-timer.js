@@ -102,37 +102,6 @@ function playSoftAudioCue(type = "tick") {
   };
 }
 
-// Test button to manually check audio (injects into page if possible)
-function injectAudioTestButton() {
-  if (window.__INJECTED_AUDIO_TEST_BTN) return;
-  const btn = document.createElement("button");
-  btn.textContent = "🔊 Test Audio Cue";
-  btn.style.position = "fixed";
-  btn.style.bottom = "20px";
-  btn.style.right = "20px";
-  btn.style.zIndex = "9999";
-  btn.style.background = "#222";
-  btn.style.color = "#fff";
-  btn.style.padding = "0.6em 1.2em";
-  btn.style.borderRadius = "0.7em";
-  btn.style.border = "none";
-  btn.style.fontSize = "1.1em";
-  btn.style.boxShadow = "0 2px 12px rgba(0,0,0,0.15)";
-  btn.style.cursor = "pointer";
-  btn.onclick = () => {
-    unlockAudioContextOnGesture();
-    playSoftAudioCue("chime");
-  };
-  document.body.appendChild(btn);
-  window.__INJECTED_AUDIO_TEST_BTN = btn;
-  console.info("[AudioCue] Injected test button. Click to play a chime and unlock audio.");
-}
-if (document.readyState === "loading") {
-  window.addEventListener("DOMContentLoaded", injectAudioTestButton);
-} else {
-  injectAudioTestButton();
-}
-
 export function startBrewing(cupSize) {
   unlockAudioContextOnGesture(); // Unlock context ASAP!
   currentRecipe =
