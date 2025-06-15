@@ -5,26 +5,28 @@
     <meta charset="UTF-8" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Add font-display swap -->
     <link href="https://fonts.googleapis.com/css2?family=PT+Root+UI:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/src/styles.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WhisperBrew - Coffee Timer</title>
     <meta name="description" content="Perfect pour-over coffee timing for 1 or 2 cups" />
     <meta name="author" content="WhisperBrew" />
-
     <meta property="og:title" content="WhisperBrew - Coffee Timer" />
     <meta property="og:description" content="Perfect pour-over coffee timing for 1 or 2 cups" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@lovable_dev" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
   </head>
-
   <body>
     <div id="root"></div>
+
+    <!-- Load brewing modules in correct order for script.js -->
+    <script type="module" src="/brewing-recipes.js"></script>
+    <script type="module" src="/brewing-ui.js"></script>
+    <script type="module" src="/brewing-timer.js"></script>
+    <script type="module" src="/script.js"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
