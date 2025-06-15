@@ -14,46 +14,71 @@ let expectedEndTime = 0;
 
 // --- SOFT AUDIO CUE SYSTEM (Web Audio API) ---
 let audioCtx = null;
+let audioJustResumed = false;
+
 function ensureAudioContext() {
   if (!audioCtx || audioCtx.state === "closed") {
     audioCtx = null;
     try {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      console.info("[AudioCue] AudioContext created.");
     } catch (e) {
-      console.warn("Web Audio API not available.");
+      console.warn("[AudioCue] Web Audio API not available.");
     }
   }
-  // Resume if it was suspended (iOS, etc)
-  if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+  if (audioCtx && audioCtx.state === "suspended") {
+    audioCtx.resume().then(() => {
+      audioJustResumed = true;
+      console.info("[AudioCue] AudioContext resumed, state:", audioCtx.state);
+    }).catch(err => {
+      console.warn("[AudioCue] Failed to resume AudioContext:", err);
+    });
+  }
+  if (audioCtx) {
+    console.debug("[AudioCue] AudioContext state:", audioCtx.state);
+  }
   return audioCtx;
+}
+
+function unlockAudioContextOnGesture() {
+  const ctx = ensureAudioContext();
+  if (ctx && ctx.state === 'suspended') {
+    ctx.resume().then(() => {
+      console.info("[AudioCue] AudioContext unlocked on user gesture.");
+    });
+  }
 }
 
 function playSoftAudioCue(type = "tick") {
   const ctx = ensureAudioContext();
-  if (!ctx) return;
+  if (!ctx || ctx.state !== 'running') {
+    console.warn("[AudioCue] Can't play cue: AudioContext not running!", ctx ? ctx.state : "no context");
+    return;
+  }
+  console.log(`[AudioCue] Playing cue: ${type}`);
 
   const o = ctx.createOscillator();
   const g = ctx.createGain();
 
-  // Tuning for "tick" and "chime"
+  // Tuning for "tick" and "chime" -- boosted for audibility
   let freq, dur, vol, decay;
 
   if (type === "tick") {
     freq = 900;
-    dur = 0.11;
-    vol = 0.15;
-    decay = 0.1;
+    dur = 0.17;    // longer
+    vol = 0.35;    // louder for debugging
+    decay = 0.13;
   } else if (type === "chime") {
     freq = 1200;
-    dur = 0.27;
-    vol = 0.19;
-    decay = 0.19;
+    dur = 0.36;    // longer
+    vol = 0.4;     // louder
+    decay = 0.25;
   } else {
     // fallback
     freq = 900;
-    dur = 0.11;
-    vol = 0.15;
-    decay = 0.1;
+    dur = 0.17;
+    vol = 0.35;
+    decay = 0.13;
   }
 
   o.type = "sine";
@@ -70,14 +95,46 @@ function playSoftAudioCue(type = "tick") {
   o.start(ctx.currentTime);
   o.stop(ctx.currentTime + dur);
 
-  // Clean up after it finishes
   o.onended = () => {
     o.disconnect();
     g.disconnect();
+    console.debug("[AudioCue] Cue played and cleaned up.");
   };
 }
 
+// Test button to manually check audio (injects into page if possible)
+function injectAudioTestButton() {
+  if (window.__INJECTED_AUDIO_TEST_BTN) return;
+  const btn = document.createElement("button");
+  btn.textContent = "🔊 Test Audio Cue";
+  btn.style.position = "fixed";
+  btn.style.bottom = "20px";
+  btn.style.right = "20px";
+  btn.style.zIndex = "9999";
+  btn.style.background = "#222";
+  btn.style.color = "#fff";
+  btn.style.padding = "0.6em 1.2em";
+  btn.style.borderRadius = "0.7em";
+  btn.style.border = "none";
+  btn.style.fontSize = "1.1em";
+  btn.style.boxShadow = "0 2px 12px rgba(0,0,0,0.15)";
+  btn.style.cursor = "pointer";
+  btn.onclick = () => {
+    unlockAudioContextOnGesture();
+    playSoftAudioCue("chime");
+  };
+  document.body.appendChild(btn);
+  window.__INJECTED_AUDIO_TEST_BTN = btn;
+  console.info("[AudioCue] Injected test button. Click to play a chime and unlock audio.");
+}
+if (document.readyState === "loading") {
+  window.addEventListener("DOMContentLoaded", injectAudioTestButton);
+} else {
+  injectAudioTestButton();
+}
+
 export function startBrewing(cupSize) {
+  unlockAudioContextOnGesture(); // Unlock context ASAP!
   currentRecipe =
     cupSize === "1-cup"
       ? window.BREWING_RECIPES.oneCup
@@ -217,3 +274,5 @@ window.__BREWING_TIMER_INTERNAL__ = {
   getTimerState,
   getTotalProgress
 };
+
+// NOTE: files that include this module MUST call unlockAudioContextOnGesture (directly or indirectly) on some user gesture to allow sounds to play per browser policy.
