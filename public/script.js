@@ -43,15 +43,14 @@ export async function releaseWakeLock() {
   }
 }
 
-// allow react to subscribe to wake lock changes
+// allow react to subscribe to wake lock changes, and expose core functions
 window.WhisperBrew = {
   showScreen,
-  startBrewing,
+  // Do NOT include startBrewing or resetBrewing directly here!
   updateTimer,
   nextStep,
   updateProgress,
   displayStep,
-  resetBrewing,
   getCurrentStep,
   getTimerState,
   getTotalProgress,
@@ -78,7 +77,7 @@ import {
   getTotalProgress
 } from "./brewing-timer.js";
 
-// Wrap brewing start/reset for wake lock control
+// Wrap brewing start/reset for wake lock control and assign to WhisperBrew
 window.WhisperBrew.startBrewing = function (cupSize) {
   requestWakeLock();
   oldStartBrewing(cupSize);
