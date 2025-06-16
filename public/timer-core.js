@@ -1,3 +1,4 @@
+
 /**
  * timer-core.js
  * Main timer orchestrator: imports state, audio, UI, and handles timer logic
@@ -29,10 +30,10 @@ export function startBrewing(cupSize) {
 
   showScreen("brewing");
 
-  // Start countdown before brewing
+  // Wait longer for screen transition to complete, then start countdown
   setTimeout(() => {
     startCountdown();
-  }, 500);
+  }, 800);
 }
 
 function startCountdown() {
@@ -48,7 +49,7 @@ function startCountdown() {
       hideCountdown();
       setTimeout(() => {
         nextStep();
-      }, 300);
+      }, 500);
     }
   }
   
