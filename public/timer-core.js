@@ -4,7 +4,7 @@
  * Main timer orchestrator: imports state, audio, UI, and handles timer logic
  */
 
-import { showScreen, updateProgress, displayStep, showCountdown, hideCountdown } from './brewing-ui.js';
+import { showScreen, updateProgress, displayStep } from './brewing-ui.js';
 import {
   currentRecipe, currentStepIndex, timerInterval, remainingTime, totalTime, isTimerRunning, stepStartTime, expectedEndTime,
   setRecipe, setStepIndex, setTimerInterval, setRemainingTime, setTotalTime, setIsTimerRunning, setStepStartTime, setExpectedEndTime,
@@ -30,30 +30,9 @@ export function startBrewing(cupSize) {
 
   showScreen("brewing");
 
-  // Wait longer for screen transition to complete, then start countdown
   setTimeout(() => {
-    startCountdown();
-  }, 800);
-}
-
-function startCountdown() {
-  let countdownValue = 3;
-  
-  function displayCountdownNumber() {
-    if (countdownValue > 0) {
-      showCountdown(countdownValue);
-      countdownValue--;
-      setTimeout(displayCountdownNumber, 1000);
-    } else {
-      // Hide countdown and start brewing
-      hideCountdown();
-      setTimeout(() => {
-        nextStep();
-      }, 500);
-    }
-  }
-  
-  displayCountdownNumber();
+    nextStep();
+  }, 500);
 }
 
 export function updateTimer() {
@@ -156,7 +135,6 @@ export function resetBrewing() {
   if (brewingTimer) brewingTimer.textContent = "--:--";
   const completeTimer = document.getElementById("complete-timer-display");
   if (completeTimer) completeTimer.textContent = "Done";
-  hideCountdown();
   showScreen("home");
 }
 
@@ -170,3 +148,4 @@ window.__BREWING_TIMER_INTERNAL__ = {
   getTimerState,
   getTotalProgress
 };
+
