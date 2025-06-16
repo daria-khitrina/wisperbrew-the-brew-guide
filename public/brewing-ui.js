@@ -80,3 +80,82 @@ export function displayStep(stepData, stepIndex, recipeLength) {
     `[displayStep] Main action: ${mainAction} | Step: ${stepData.step} of ${recipeLength}`
   );
 }
+
+export function showCountdown(number) {
+  // Hide step instruction and timer during countdown
+  const stepInstruction = document.querySelector("#brewing-screen #step-instruction");
+  const timerDisplay = document.getElementById("brewing-timer-display");
+  
+  if (stepInstruction) {
+    stepInstruction.style.opacity = '0';
+  }
+  if (timerDisplay) {
+    timerDisplay.style.opacity = '0';
+  }
+  
+  // Create or get countdown element
+  let countdownElement = document.getElementById("countdown-display");
+  if (!countdownElement) {
+    countdownElement = document.createElement("div");
+    countdownElement.id = "countdown-display";
+    countdownElement.style.cssText = `
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 6rem;
+      font-weight: 700;
+      color: #191919;
+      font-family: 'PT Root UI', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: 'tnum' 1;
+      line-height: 1;
+      transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      opacity: 0;
+    `;
+    
+    const brewingScreen = document.getElementById("brewing-screen");
+    if (brewingScreen) {
+      brewingScreen.appendChild(countdownElement);
+    }
+  }
+  
+  // Set number and animate
+  countdownElement.textContent = number;
+  countdownElement.style.transform = 'translate(-50%, -50%) scale(1.05)';
+  countdownElement.style.opacity = '1';
+  
+  // Animate to normal scale
+  setTimeout(() => {
+    countdownElement.style.transform = 'translate(-50%, -50%) scale(1)';
+  }, 50);
+  
+  console.log(`[Countdown] Showing: ${number}`);
+}
+
+export function hideCountdown() {
+  const countdownElement = document.getElementById("countdown-display");
+  const stepInstruction = document.querySelector("#brewing-screen #step-instruction");
+  const timerDisplay = document.getElementById("brewing-timer-display");
+  
+  if (countdownElement) {
+    countdownElement.style.opacity = '0';
+    countdownElement.style.transform = 'translate(-50%, -50%) scale(0.95)';
+    
+    setTimeout(() => {
+      if (countdownElement.parentNode) {
+        countdownElement.parentNode.removeChild(countdownElement);
+      }
+    }, 300);
+  }
+  
+  // Show step instruction and timer
+  if (stepInstruction) {
+    stepInstruction.style.opacity = '1';
+  }
+  if (timerDisplay) {
+    timerDisplay.style.opacity = '1';
+  }
+  
+  console.log("[Countdown] Hidden");
+}
