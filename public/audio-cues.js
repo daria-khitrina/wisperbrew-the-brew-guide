@@ -1,10 +1,30 @@
 
 /**
  * audio-cues.js
- * All functions for managing beep and chime using Web Audio API
+ * All functions for managing beep and chime using chime.mp3 file
  */
 
 let audioCtx = null;
+let chimeAudio = null;
+
+// Preload the chime audio file
+function preloadChimeAudio() {
+  if (!chimeAudio) {
+    chimeAudio = new Audio('/chime.mp3');
+    chimeAudio.preload = 'auto';
+    chimeAudio.volume = 0.7;
+    
+    chimeAudio.addEventListener('error', (e) => {
+      console.warn("[AudioCue] Failed to load chime.mp3:", e);
+      chimeAudio = null;
+    });
+    
+    chimeAudio.addEventListener('canplaythrough', () => {
+      console.info("[AudioCue] chime.mp3 loaded successfully");
+    });
+  }
+  return chimeAudio;
+}
 
 export function ensureAudioContext() {
   if (!audioCtx || audioCtx.state === "closed") {
@@ -33,19 +53,57 @@ export function unlockAudioContextOnGesture() {
       console.info("[AudioCue] AudioContext unlocked on user gesture.");
     });
   }
+  
+  // Also unlock HTML5 audio on user gesture
+  const audio = preloadChimeAudio();
+  if (audio) {
+    audio.play().then(() => {
+      audio.pause();
+      audio.currentTime = 0;
+      console.info("[AudioCue] HTML5 Audio unlocked on user gesture.");
+    }).catch(() => {
+      // Silent fail - this is expected on first gesture
+    });
+  }
 }
 
 /**
- * Play a soft audio cue for step and completion
- * @param {"tick" | "chime"} type
+ * Play chime.mp3 audio file
  */
-export function playSoftAudioCue(type = "tick") {
+function playChimeAudio() {
+  const audio = preloadChimeAudio();
+  if (!audio) {
+    console.warn("[AudioCue] chime.mp3 not available, falling back to Web Audio API");
+    return false;
+  }
+  
+  try {
+    audio.currentTime = 0;
+    const playPromise = audio.play();
+    
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        console.debug("[AudioCue] chime.mp3 played successfully");
+      }).catch(error => {
+        console.warn("[AudioCue] Failed to play chime.mp3:", error);
+      });
+    }
+    return true;
+  } catch (error) {
+    console.warn("[AudioCue] Error playing chime.mp3:", error);
+    return false;
+  }
+}
+
+/**
+ * Fallback Web Audio API sound (same as before)
+ */
+function playWebAudioFallback(type = "tick") {
   const ctx = ensureAudioContext();
   if (!ctx || ctx.state !== 'running') {
-    console.warn("[AudioCue] Can't play cue: AudioContext not running!", ctx ? ctx.state : "no context");
+    console.warn("[AudioCue] Can't play fallback: AudioContext not running!", ctx ? ctx.state : "no context");
     return;
   }
-  console.log(`[AudioCue] Playing cue: ${type}`);
 
   const o = ctx.createOscillator();
   const g = ctx.createGain();
@@ -85,6 +143,26 @@ export function playSoftAudioCue(type = "tick") {
   o.onended = () => {
     o.disconnect();
     g.disconnect();
-    console.debug("[AudioCue] Cue played and cleaned up.");
+    console.debug("[AudioCue] Fallback cue played and cleaned up.");
   };
 }
+
+/**
+ * Play a soft audio cue for step and completion
+ * @param {"tick" | "chime"} type
+ */
+export function playSoftAudioCue(type = "tick") {
+  console.log(`[AudioCue] Playing cue: ${type}`);
+  
+  // Try to play chime.mp3 first
+  const success = playChimeAudio();
+  
+  // If chime.mp3 fails, fallback to Web Audio API
+  if (!success) {
+    console.log(`[AudioCue] Falling back to Web Audio API for ${type}`);
+    playWebAudioFallback(type);
+  }
+}
+
+// Initialize audio on module load
+preloadChimeAudio();
