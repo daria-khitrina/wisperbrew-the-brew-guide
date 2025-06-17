@@ -1,4 +1,3 @@
-
 // public/brewing-timer.js
 
 import { showScreen, updateProgress, displayStep } from './brewing-ui.js';
@@ -105,23 +104,12 @@ function playSoftAudioCue(type = "tick") {
 
 export function startBrewing(cupSize) {
   unlockAudioContextOnGesture(); // Unlock context ASAP!
-  
-  // Debug logging to see what recipes are available and which one is selected
-  console.log("[DEBUG] Starting brewing with cupSize:", cupSize);
-  console.log("[DEBUG] Available recipes:", window.BREWING_RECIPES);
-  
-  if (cupSize === "2-cup") {
-    currentRecipe = window.BREWING_RECIPES.twoCup;
-    console.log("[DEBUG] Selected 2-cup recipe with steps:", currentRecipe.length);
-    console.log("[DEBUG] First step:", currentRecipe[0]);
-  } else {
-    currentRecipe = window.BREWING_RECIPES.oneCup;
-    console.log("[DEBUG] Selected 1-cup recipe with steps:", currentRecipe.length);
-  }
-  
+  currentRecipe =
+    cupSize === "1-cup"
+      ? window.BREWING_RECIPES.oneCup
+      : window.BREWING_RECIPES.twoCup;
   currentStepIndex = 0;
   totalTime = currentRecipe.reduce((sum, step) => sum + step.duration, 0);
-  console.log("[DEBUG] Total brewing time:", totalTime, "seconds");
 
   showScreen("brewing");
 
@@ -172,8 +160,6 @@ export function nextStep() {
     return;
   }
   const currentStep = currentRecipe[currentStepIndex];
-  console.log("[DEBUG] Starting step", currentStepIndex + 1, ":", currentStep.instruction);
-  
   stepStartTime = Date.now();
   expectedEndTime = stepStartTime + currentStep.duration * 1000;
   remainingTime = currentStep.duration;
