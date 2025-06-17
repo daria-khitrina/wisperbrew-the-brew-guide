@@ -1,4 +1,3 @@
-
 // public/brewing-recipes.js
 
 // Attach to window
