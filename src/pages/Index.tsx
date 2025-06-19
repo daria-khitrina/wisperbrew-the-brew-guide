@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { runConfetti } from '../lib/confetti';
 
@@ -6,6 +7,7 @@ declare global {
     WhisperBrew?: {
       showScreen: (screen: string) => void;
       startBrewing: (cupSize: string) => void;
+      startCountdown: (cupSize: string) => void;
       updateTimer: () => void;
       nextStep: () => void;
       updateProgress: (percentage: number) => void;
