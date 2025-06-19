@@ -175,6 +175,7 @@ export async function releaseWakeLock() {
 // Expose core functions for React, but no more toast/wake lock state
 window.WhisperBrew = {
   showScreen,
+  startCountdown,
   // Do NOT include startBrewing or resetBrewing directly here!
   updateTimer,
   nextStep,
@@ -194,6 +195,7 @@ import "./brewing-recipes.js";
 import { showScreen, updateProgress, displayStep } from "./brewing-ui.js";
 import {
   startBrewing as oldStartBrewing,
+  startCountdown,
   updateTimer,
   nextStep,
   resetBrewing as oldResetBrewing,
