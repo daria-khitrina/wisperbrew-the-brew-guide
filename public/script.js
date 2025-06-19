@@ -1,3 +1,4 @@
+
 // public/script.js
 
 // Top-level stand-alone loader for modules. Uses type="module".
@@ -172,22 +173,6 @@ export async function releaseWakeLock() {
   stopVibrationFallback();
 }
 
-// Expose core functions for React, but no more toast/wake lock state
-window.WhisperBrew = {
-  showScreen,
-  startCountdown,
-  // Do NOT include startBrewing or resetBrewing directly here!
-  updateTimer,
-  nextStep,
-  updateProgress,
-  displayStep,
-  getCurrentStep,
-  getTimerState,
-  getTotalProgress,
-  requestWakeLock,
-  releaseWakeLock,
-};
-
 //
 // --- Brew timer integration ---
 // On brewing start, acquire; on complete/reset, release
@@ -205,14 +190,32 @@ import {
 } from "./brewing-timer.js";
 
 // Wrap brewing start/reset for wake lock control and assign to WhisperBrew
-window.WhisperBrew.startBrewing = function (cupSize) {
+function wrappedStartBrewing(cupSize) {
   requestWakeLock();
   oldStartBrewing(cupSize);
 }
-window.WhisperBrew.resetBrewing = function () {
+
+function wrappedResetBrewing() {
   releaseWakeLock();
   oldResetBrewing();
 }
+
+// Expose core functions for React - NOW WITH ALL IMPORTS COMPLETE
+window.WhisperBrew = {
+  showScreen,
+  startBrewing: wrappedStartBrewing,
+  startCountdown,
+  updateTimer,
+  nextStep,
+  updateProgress,
+  displayStep,
+  resetBrewing: wrappedResetBrewing,
+  getCurrentStep,
+  getTimerState,
+  getTotalProgress,
+  requestWakeLock,
+  releaseWakeLock,
+};
 
 console.log(
   "WhisperBrew functions available globally:",
