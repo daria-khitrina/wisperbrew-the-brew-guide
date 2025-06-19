@@ -108,6 +108,8 @@ export function startCountdown(cupSize) {
   // Store cup size for after countdown
   window.__BREWING_CUP_SIZE__ = cupSize;
   
+  // Properly show countdown screen (this will hide other screens)
+  showScreen("countdown");
   showCountdown(3);
   
   let count = 3;
