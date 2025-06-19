@@ -1,6 +1,6 @@
 // public/brewing-timer.js
 
-import { showScreen, updateProgress, displayStep } from './brewing-ui.js';
+import { showScreen, updateProgress, displayStep, showCountdown, hideCountdown } from './brewing-ui.js';
 
 let currentRecipe = [];
 let currentStepIndex = 0;
@@ -102,8 +102,29 @@ function playSoftAudioCue(type = "tick") {
   };
 }
 
-export function startBrewing(cupSize) {
+export function startCountdown(cupSize) {
   unlockAudioContextOnGesture(); // Unlock context ASAP!
+  
+  // Store cup size for after countdown
+  window.__BREWING_CUP_SIZE__ = cupSize;
+  
+  showCountdown(3);
+  
+  let count = 3;
+  const countdownInterval = setInterval(() => {
+    count--;
+    if (count > 0) {
+      showCountdown(count);
+    } else {
+      clearInterval(countdownInterval);
+      hideCountdown();
+      // Start actual brewing after countdown
+      startBrewingAfterCountdown(window.__BREWING_CUP_SIZE__);
+    }
+  }, 1000);
+}
+
+function startBrewingAfterCountdown(cupSize) {
   currentRecipe =
     cupSize === "1-cup"
       ? window.BREWING_RECIPES.oneCup
@@ -116,6 +137,11 @@ export function startBrewing(cupSize) {
   setTimeout(() => {
     nextStep();
   }, 500);
+}
+
+export function startBrewing(cupSize) {
+  // This function now just calls startCountdown
+  startCountdown(cupSize);
 }
 
 export function updateTimer() {
@@ -236,6 +262,7 @@ export function getTotalProgress() {
 // Attach methods for non-module consumers if needed
 window.__BREWING_TIMER_INTERNAL__ = {
   startBrewing,
+  startCountdown,
   updateTimer,
   nextStep,
   resetBrewing,

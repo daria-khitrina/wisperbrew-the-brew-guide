@@ -1,8 +1,5 @@
-
 import { useEffect, useState } from 'react';
 import { runConfetti } from '../lib/confetti';
-
-// Removed: import { useWakeLockNotice } from './useWakeLockNotice';
 
 declare global {
   interface Window {
@@ -33,13 +30,10 @@ const Index = () => {
   const [isBrewingReady, setIsBrewingReady] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
 
-  // Removed: useWakeLockNotice();
-
   useEffect(() => {
     setIsBrewingReady(false);
     setLoadingError(false);
 
-    // Give brewing scripts some time to load before checking for WhisperBrew
     const timer = setTimeout(() => {
       if (window.WhisperBrew && typeof window.WhisperBrew.startBrewing === 'function') {
         setIsBrewingReady(true);
@@ -49,7 +43,6 @@ const Index = () => {
       }
     }, 250); // check after initial script load
 
-    // Failsafe: if still not loaded after max wait, show error
     const timeout = setTimeout(() => {
       if (!window.WhisperBrew) {
         setIsBrewingReady(false);
@@ -86,8 +79,8 @@ const Index = () => {
 
   const handleCupSelection = (cupSize: string) => {
     if (!isBrewingReady || loadingError) return;
-    if (window.WhisperBrew && window.WhisperBrew.startBrewing) {
-      window.WhisperBrew.startBrewing(cupSize);
+    if (window.WhisperBrew && window.WhisperBrew.startCountdown) {
+      window.WhisperBrew.startCountdown(cupSize);
     }
   };
 
@@ -128,6 +121,21 @@ const Index = () => {
             )}
           </div>
         )}
+
+        {/* Countdown Screen */}
+        <div
+          id="countdown-screen"
+          style={{ display: 'none' }}
+          className="fixed inset-0 z-50 bg-background flex items-center justify-center"
+        >
+          <div 
+            id="countdown-number"
+            className="text-[8rem] md:text-[12rem] font-bold text-coffee-dark transition-transform duration-500 ease-out"
+            style={{ transform: 'scale(1.05)' }}
+          >
+            3
+          </div>
+        </div>
 
         <div
           id="home-screen"
@@ -238,4 +246,3 @@ const Index = () => {
 };
 
 export default Index;
-

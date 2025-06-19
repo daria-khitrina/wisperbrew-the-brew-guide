@@ -1,9 +1,8 @@
-
 // public/brewing-ui.js
 
 export function showScreen(screenId) {
-  // ... same as before: hides all, shows one
-  const screens = ['home', 'brewing', 'complete'];
+  // ... keep existing code (same as before: hides all, shows one)
+  const screens = ['home', 'brewing', 'complete', 'countdown'];
   screens.forEach(screen => {
     const element = document.getElementById(`${screen}-screen`);
     if (element) {
@@ -15,11 +14,34 @@ export function showScreen(screenId) {
   setTimeout(() => {
     const targetScreen = document.getElementById(`${screenId}-screen`);
     if (targetScreen) {
-      targetScreen.style.display = 'block';
+      targetScreen.style.display = screenId === 'countdown' ? 'flex' : 'block';
       targetScreen.classList.remove('fade-out');
       targetScreen.classList.add('fade-in');
     }
   }, 300);
+}
+
+export function showCountdown(number) {
+  const countdownScreen = document.getElementById('countdown-screen');
+  const countdownNumber = document.getElementById('countdown-number');
+  
+  if (countdownScreen && countdownNumber) {
+    countdownScreen.style.display = 'flex';
+    countdownNumber.textContent = number.toString();
+    countdownNumber.style.transform = 'scale(1.05)';
+    
+    // Animate scale down to 100% over 500ms
+    setTimeout(() => {
+      countdownNumber.style.transform = 'scale(1.0)';
+    }, 50);
+  }
+}
+
+export function hideCountdown() {
+  const countdownScreen = document.getElementById('countdown-screen');
+  if (countdownScreen) {
+    countdownScreen.style.display = 'none';
+  }
 }
 
 export function updateProgress(percentage, currentScreen = "brewing") {
