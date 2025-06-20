@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { runConfetti } from '../lib/confetti';
 
@@ -176,7 +175,7 @@ const Index = () => {
           style={{
             display: 'none',
           }}
-          className="flex flex-col min-h-screen md:min-h-0 max-w-md mx-auto py-6 px-0 md:bg-white md:rounded-3xl md:shadow-md md:px-6"
+          className="flex flex-col min-h-screen md:min-h-0 max-w-md mx-auto py-6 px-0 md:bg-white md:rounded-3xl md:shadow-md md:px-6 justify-between"
         >
           <div className="w-full">
             <div className="brew-progress-bar bg-[#e5eaf2] rounded-full h-3 w-full relative overflow-hidden shadow-xs">
@@ -188,7 +187,7 @@ const Index = () => {
               ></div>
             </div>
           </div>
-          <div className="flex flex-col items-center justify-center gap-3 flex-1 py-6 md:py-[200px]">
+          <div className="flex flex-col items-center justify-center gap-3">
             <h2
               id="step-instruction"
               className="font-bold text-2xl text-black text-center tracking-tight"
