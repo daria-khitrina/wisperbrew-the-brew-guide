@@ -110,7 +110,11 @@ export function startCountdown(cupSize) {
   
   // Properly show countdown screen (this will hide other screens)
   showScreen("countdown");
-  showCountdown(3);
+  
+  // Wait for screen transition to complete before showing first countdown number
+  setTimeout(() => {
+    showCountdown(3);
+  }, 350); // Wait slightly longer than the 300ms screen transition
   
   let count = 3;
   const countdownInterval = setInterval(() => {
